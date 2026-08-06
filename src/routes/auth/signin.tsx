@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { login } from "@/lib/auth";
+import { login, getDashboardPath } from "@/lib/auth";
 
 export const Route = createFileRoute("/auth/signin")({
   component: SignIn,
@@ -38,7 +38,7 @@ function SignIn() {
     try {
       const result = await login({ email, password });
       localStorage.setItem("dt_auth_token", result.token);
-      window.location.href = "/";
+      window.location.href = getDashboardPath(result.user.role);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

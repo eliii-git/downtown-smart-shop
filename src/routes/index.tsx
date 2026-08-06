@@ -1,4 +1,6 @@
+"use client";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -25,6 +27,8 @@ import { AISearchBar } from "@/components/site/AISearchBar";
 import { ProductCard } from "@/components/site/ProductCard";
 import { TrustScore } from "@/components/site/TrustScore";
 import { categories, faqs, products, shops, testimonials, videoFeed } from "@/data/marketplace";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { getDashboardPath } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -80,6 +84,27 @@ function SectionHead({
 }
 
 function Index() {
+  const { user, isAuthenticated, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user) {
+      window.location.href = getDashboardPath(user.role);
+    }
+  }, [isAuthenticated, isLoading, user]);
+
+  if (isLoading) {
+    return (
+      <Shell>
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <div className="text-center">
+            <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <p className="mt-4 text-sm text-muted-foreground">Loading...</p>
+          </div>
+        </div>
+      </Shell>
+    );
+  }
+
   return (
     <Shell>
       {/* Hero */}

@@ -81,3 +81,16 @@ export async function logout(): Promise<void> {
   if (typeof window === "undefined") return;
   localStorage.removeItem(SESSION_KEY);
 }
+
+export function getDashboardPath(role: UserRole): string {
+  switch (role) {
+    case "vendor":
+      return "/vendor/dashboard";
+    case "transport":
+      return "/transport/dashboard";
+    case "customer":
+      return "/customer/dashboard";
+    default:
+      return "/";
+  }
+}

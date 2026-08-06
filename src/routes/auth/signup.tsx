@@ -20,7 +20,7 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { signup } from "@/lib/auth";
+import { signup, getDashboardPath } from "@/lib/auth";
 import { type UserRole } from "@/lib/auth-schema";
 
 export const Route = createFileRoute("/auth/signup")({
@@ -78,7 +78,7 @@ function SignUp() {
         defaultAddress: formData.defaultAddress || undefined,
       });
       localStorage.setItem("dt_auth_token", result.token);
-      window.location.href = "/";
+      window.location.href = getDashboardPath(result.user.role);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Signup failed");
     } finally {
