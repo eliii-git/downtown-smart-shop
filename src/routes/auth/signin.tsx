@@ -1,6 +1,6 @@
 "use client";
+import { useState, useCallback } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 import { Loader2, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,21 +25,29 @@ function SignIn() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      const result = await login({ email, password });
-      localStorage.setItem("dt_auth_token", result.token);
-      setTimeout(() => {
-        window.location.href = getDashboardPath(result.user.role);
-      }, 50);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
-      setLoading(false);
-    }
-  };
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setError("");
+      setLoading(true);
+      try {
+        const result = await login({ email, password });
+        localStorage.setItem("dt_auth_token", result.token);
+        setTimeout(() => {
+          window.location.href = getDashboardPath(result.user.role);
+        }, 50);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Login failed");
+        setLoading(false);
+      }
+    },
+    [email, password]
+  );
+
+  const handleSignUpClick = useCallback(() => {
+    window.location.href = "/auth/signup";
+  }, []);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -61,6 +69,7 @@ function SignIn() {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                key="signin-email"
                 type="email"
                 placeholder="you@example.com"
                 value={email}
@@ -72,6 +81,7 @@ function SignIn() {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                key="signin-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -87,8 +97,13 @@ function SignIn() {
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               Don't have an account?{" "}
-              <Button variant="link" className="p-0 h-auto" asChild>
-                <a href="/auth/signup">Sign up</a>
+              <Button
+                type="button"
+                variant="link"
+                className="p-0 h-auto"
+                onClick={handleSignUpClick}
+              >
+                Sign up
               </Button>
             </p>
           </CardFooter>
