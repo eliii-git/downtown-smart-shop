@@ -1,17 +1,10 @@
 "use client";
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -23,9 +16,7 @@ import {
 import { signup, getDashboardPath } from "@/lib/auth";
 import { type UserRole } from "@/lib/auth-schema";
 
-export const Route = createFileRoute("/auth/signup")({
-  component: SignUp,
-});
+const STORAGE_KEY = "dt_signup_draft";
 
 const roleOptions = [
   { value: "customer" as UserRole, label: "Customer", description: "Buy products from shops" },
@@ -33,17 +24,9 @@ const roleOptions = [
   { value: "transport" as UserRole, label: "Transport Facilitator", description: "Deliver goods (Safeboda, Farasi)" },
 ];
 
-const transportCompanies = [
-  { value: "safeboda", label: "Safeboda" },
-  { value: "farasi", label: "Farasi" },
-  { value: "other", label: "Other" },
-];
-
-const vehicleTypes = [
-  { value: "boda-boda", label: "Boda Boda" },
-  { value: "truck", label: "Truck" },
-  { value: "pickup", label: "Pickup" },
-];
+export const Route = createFileRoute("/auth/signup")({
+  component: SignUp,
+});
 
 function SignUp() {
   const [error, setError] = useState("");
@@ -57,10 +40,46 @@ function SignUp() {
   const confirmRef = useRef<HTMLInputElement>(null);
   const businessRef = useRef<HTMLInputElement>(null);
   const shopRef = useRef<HTMLInputElement>(null);
-  const companyRef = useRef<HTMLInputElement>(null);
-  const vehicleRef = useRef<HTMLInputElement>(null);
   const licenseRef = useRef<HTMLInputElement>(null);
   const addressRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    try {
+      const draft = JSON.parse(raw);
+      if (draft.name && nameRef.current) nameRef.current.value = draft.name;
+      if (draft.phone && phoneRef.current) phoneRef.current.value = draft.phone;
+      if (draft.email && emailRef.current) emailRef.current.value = draft.email;
+      if (draft.password && passwordRef.current) passwordRef.current.value = draft.password;
+      if (draft.confirmPassword && confirmRef.current) confirmRef.current.value = draft.confirmPassword;
+      if (draft.businessName && businessRef.current) businessRef.current.value = draft.businessName;
+      if (draft.shopLocation && shopRef.current) shopRef.current.value = draft.shopLocation;
+      if (draft.licenseNumber && licenseRef.current) licenseRef.current.value = draft.licenseNumber;
+      if (draft.defaultAddress && addressRef.current) addressRef.current.value = draft.defaultAddress;
+      if (draft.role) setRole(draft.role);
+    } catch {}
+  }, []);
+
+  const persist = () => {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          name: nameRef.current?.value,
+          phone: phoneRef.current?.value,
+          email: emailRef.current?.value,
+          password: passwordRef.current?.value,
+          confirmPassword: confirmRef.current?.value,
+          businessName: businessRef.current?.value,
+          shopLocation: shopRef.current?.value,
+          licenseNumber: licenseRef.current?.value,
+          defaultAddress: addressRef.current?.value,
+          role,
+        })
+      );
+    } catch {}
+  };
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -74,8 +93,6 @@ function SignUp() {
       const confirmValue = confirmRef.current?.value ?? "";
       const businessValue = businessRef.current?.value?.trim() ?? "";
       const shopValue = shopRef.current?.value?.trim() ?? "";
-      const companyValue = companyRef.current?.value?.trim() ?? "";
-      const vehicleValue = vehicleRef.current?.value?.trim() ?? "";
       const licenseValue = licenseRef.current?.value?.trim() ?? "";
       const addressValue = addressRef.current?.value?.trim() ?? "";
 
@@ -98,11 +115,10 @@ function SignUp() {
           role: role as UserRole,
           businessName: businessValue || undefined,
           shopLocation: shopValue || undefined,
-          transportCompany: companyValue || undefined,
-          vehicleType: vehicleValue || undefined,
           licenseNumber: licenseValue || undefined,
           defaultAddress: addressValue || undefined,
         });
+        localStorage.removeItem(STORAGE_KEY);
         localStorage.setItem("dt_auth_token", result.token);
         setTimeout(() => {
           window.location.href = getDashboardPath(result.user.role);
@@ -137,48 +153,47 @@ function SignUp() {
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="signup-name">Full Name</Label>
-                  <Input ref={nameRef} id="signup-name" required />
+                  <Input ref={nameRef} id="signup-name" required onChange={persist} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-phone">Phone Number</Label>
-                  <Input ref={phoneRef} id="signup-phone" type="tel" placeholder="+256 700 000000" required />
+                  <Input ref={phoneRef} id="signup-phone" type="tel" placeholder="+256 700 000000" required onChange={persist} />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="signup-email">Email</Label>
-                <Input ref={emailRef} id="signup-email" type="email" required />
+                <Input ref={emailRef} id="signup-email" type="email" required onChange={persist} />
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
-                  <Input ref={passwordRef} id="signup-password" type="password" required />
+                  <Input ref={passwordRef} id="signup-password" type="password" required onChange={persist} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-confirm">Confirm Password</Label>
-                  <Input ref={confirmRef} id="signup-confirm" type="password" required />
+                  <Input ref={confirmRef} id="signup-confirm" type="password" required onChange={persist} />
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="signup-role">I am a...</Label>
-              <Select value={role || undefined} onValueChange={(value) => {
-                setRole(value as UserRole);
-              }}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
-                <SelectContent>
-                  {roleOptions.map((r) => (
-                    <SelectItem key={r.value} value={r.value}>
-                      <div>
-                        <p className="font-medium">{r.label}</p>
-                        <p className="text-xs text-muted-foreground">{r.description}</p>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <select
+                id="signup-role"
+                value={role}
+                onChange={(e) => {
+                  setRole(e.target.value as UserRole);
+                  persist();
+                }}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="">Select your role</option>
+                {roleOptions.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {role === "vendor" && (
@@ -186,11 +201,11 @@ function SignUp() {
                 <h4 className="text-sm font-semibold">Shop Details</h4>
                 <div className="space-y-2">
                   <Label htmlFor="vendor-business">Shop / Business Name</Label>
-                  <Input ref={businessRef} id="vendor-business" required />
+                  <Input ref={businessRef} id="vendor-business" required onChange={persist} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="vendor-location">Shop Location (e.g., Kikubo Stall 24)</Label>
-                  <Input ref={shopRef} id="vendor-location" required />
+                  <Input ref={shopRef} id="vendor-location" required onChange={persist} />
                 </div>
               </div>
             )}
@@ -199,42 +214,8 @@ function SignUp() {
               <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4">
                 <h4 className="text-sm font-semibold">Transport Details</h4>
                 <div className="space-y-2">
-                  <Label htmlFor="transport-company">Company</Label>
-                  <Select value={companyRef.current?.value || undefined} onValueChange={(value) => {
-                    if (companyRef.current) companyRef.current.value = value;
-                  }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select company" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {transportCompanies.map((company) => (
-                        <SelectItem key={company.value} value={company.value}>
-                          {company.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="transport-vehicle">Vehicle Type</Label>
-                  <Select value={vehicleRef.current?.value || undefined} onValueChange={(value) => {
-                    if (vehicleRef.current) vehicleRef.current.value = value;
-                  }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select vehicle type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {vehicleTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
                   <Label htmlFor="transport-license">License / Registration Number</Label>
-                  <Input ref={licenseRef} id="transport-license" required />
+                  <Input ref={licenseRef} id="transport-license" required onChange={persist} />
                 </div>
               </div>
             )}
@@ -244,7 +225,7 @@ function SignUp() {
                 <h4 className="text-sm font-semibold">Delivery Information</h4>
                 <div className="space-y-2">
                   <Label htmlFor="customer-address">Default Delivery Address</Label>
-                  <Input ref={addressRef} id="customer-address" placeholder="e.g., Nakawa, Kampala" required />
+                  <Input ref={addressRef} id="customer-address" placeholder="e.g., Nakawa, Kampala" required onChange={persist} />
                 </div>
               </div>
             )}

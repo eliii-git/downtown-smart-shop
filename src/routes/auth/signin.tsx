@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/card";
 import { login, getDashboardPath } from "@/lib/auth";
 
+const STORAGE_KEY = "dt_signin_draft";
+
 export const Route = createFileRoute("/auth/signin")({
   component: SignIn,
 });
@@ -24,6 +26,22 @@ function SignIn() {
   const passwordRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    try {
+      const draft = JSON.parse(raw);
+      if (emailRef.current && draft.email) emailRef.current.value = draft.email;
+      if (passwordRef.current && draft.password) passwordRef.current.value = draft.password;
+    } catch {}
+  }, []);
+
+  const persist = (email?: string, password?: string) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ email, password }));
+    } catch {}
+  };
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -40,6 +58,7 @@ function SignIn() {
       setLoading(true);
       try {
         const result = await login({ email: emailValue, password: passwordValue });
+        localStorage.removeItem(STORAGE_KEY);
         localStorage.setItem("dt_auth_token", result.token);
         setTimeout(() => {
           window.location.href = getDashboardPath(result.user.role);
@@ -70,11 +89,24 @@ function SignIn() {
             )}
             <div className="space-y-2">
               <Label htmlFor="signin-email">Email</Label>
-              <Input ref={emailRef} id="signin-email" type="email" placeholder="you@example.com" required />
+              <Input
+                ref={emailRef}
+                id="signin-email"
+                type="email"
+                placeholder="you@example.com"
+                required
+                onChange={(e) => persist(e.target.value, passwordRef.current?.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="signin-password">Password</Label>
-              <Input ref={passwordRef} id="signin-password" type="password" required />
+              <Input
+                ref={passwordRef}
+                id="signin-password"
+                type="password"
+                required
+                onChange={(e) => persist(emailRef.current?.value, e.target.value)}
+              />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
