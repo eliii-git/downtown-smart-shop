@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Bell, Heart, Menu, ShoppingBag, Sparkles } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { AuthNav } from "@/components/auth/AuthNav";
 
 const nav = [
   { to: "/market", label: "Marketplace" },
@@ -73,6 +74,7 @@ export function Header() {
             <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-primary" />
           </button>
           <ThemeToggle />
+          <AuthNav />
           <button
             type="button"
             aria-label="Menu"
