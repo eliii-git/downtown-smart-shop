@@ -35,7 +35,12 @@ export function AuthNav() {
     );
   }
 
-  const initials = user.name.split(" ").map((n) => n[0]).join("").toUpperCase();
+  const initials = user.name
+    .split(" ")
+    .filter(Boolean)
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 
   const roleIcon = {
     vendor: Store,

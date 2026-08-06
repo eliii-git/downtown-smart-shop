@@ -18,7 +18,7 @@ function CustomerDashboard() {
     if (!isLoading && (!isAuthenticated || user?.role !== "customer")) {
       throw redirect({ to: "/auth/signin" });
     }
-  }, [isAuthenticated, isLoading, user]);
+  }, [isAuthenticated, isLoading, user?.role]);
 
   if (isLoading) {
     return (

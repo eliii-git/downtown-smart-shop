@@ -23,7 +23,7 @@ export const Route = createFileRoute("/vendor/revenue")({
   component: RevenueMonitoring,
 });
 
-const revenueData = [
+const dailyData = [
   { day: "Mon", revenue: 450000, orders: 12 },
   { day: "Tue", revenue: 380000, orders: 9 },
   { day: "Wed", revenue: 520000, orders: 15 },
@@ -34,21 +34,31 @@ const revenueData = [
 ];
 
 const weeklyData = [
-  { week: "W1", revenue: 2400000 },
-  { week: "W2", revenue: 2800000 },
-  { week: "W3", revenue: 3200000 },
-  { week: "W4", revenue: 4100000 },
+  { day: "W1", revenue: 2400000, orders: 65 },
+  { day: "W2", revenue: 2800000, orders: 78 },
+  { day: "W3", revenue: 3200000, orders: 89 },
+  { day: "W4", revenue: 4100000, orders: 112 },
+];
+
+const monthlyData = [
+  { day: "Jan", revenue: 8500000, orders: 210 },
+  { day: "Feb", revenue: 9200000, orders: 245 },
+  { day: "Mar", revenue: 10500000, orders: 280 },
+  { day: "Apr", revenue: 12300000, orders: 320 },
 ];
 
 function RevenueMonitoring() {
   const { isAuthenticated, isLoading, user } = useAuth();
   const [timeRange, setTimeRange] = useState("week");
 
+  const chartData = timeRange === "day" ? dailyData : timeRange === "week" ? weeklyData : monthlyData;
+  const chartLabel = timeRange === "day" ? "day" : timeRange === "week" ? "week" : "month";
+
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || user?.role !== "vendor")) {
       throw redirect({ to: "/auth/signin" });
     }
-  }, [isAuthenticated, isLoading, user]);
+  }, [isAuthenticated, isLoading, user?.role]);
 
   if (isLoading) {
     return (
@@ -131,7 +141,7 @@ function RevenueMonitoring() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={revenueData}>
+                <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                   <XAxis dataKey="day" className="text-xs" />
                   <YAxis className="text-xs" />
@@ -152,9 +162,9 @@ function RevenueMonitoring() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={weeklyData}>
+                <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                  <XAxis dataKey="week" className="text-xs" />
+                  <XAxis dataKey="day" className="text-xs" />
                   <YAxis className="text-xs" />
                   <Tooltip
                     contentStyle={{ backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))" }}

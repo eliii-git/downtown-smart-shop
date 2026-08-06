@@ -18,7 +18,7 @@ function VendorDashboard() {
     if (!isLoading && (!isAuthenticated || user?.role !== "vendor")) {
       throw redirect({ to: "/auth/signin" });
     }
-  }, [isAuthenticated, isLoading, user]);
+  }, [isAuthenticated, isLoading, user?.role]);
 
   if (isLoading) {
     return (

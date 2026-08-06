@@ -18,7 +18,7 @@ function TransportDashboard() {
     if (!isLoading && (!isAuthenticated || user?.role !== "transport")) {
       throw redirect({ to: "/auth/signin" });
     }
-  }, [isAuthenticated, isLoading, user]);
+  }, [isAuthenticated, isLoading, user?.role]);
 
   if (isLoading) {
     return (

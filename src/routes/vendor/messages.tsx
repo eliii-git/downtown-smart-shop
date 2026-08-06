@@ -93,7 +93,7 @@ function VendorMessages() {
     if (!isLoading && (!isAuthenticated || user?.role !== "vendor")) {
       throw redirect({ to: "/auth/signin" });
     }
-  }, [isAuthenticated, isLoading, user]);
+  }, [isAuthenticated, isLoading, user?.role]);
 
   useEffect(() => {
     scrollToBottom();

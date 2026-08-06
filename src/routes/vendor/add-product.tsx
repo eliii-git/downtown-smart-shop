@@ -16,7 +16,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ArrowLeft, Plus, Upload, Image as ImageIcon } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/vendor/add-product")({
   component: AddProduct,
@@ -35,6 +35,7 @@ const categories = [
 ];
 
 function AddProduct() {
+  const navigate = useNavigate();
   const { isAuthenticated, isLoading, user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
@@ -58,7 +59,7 @@ function AddProduct() {
     if (!isLoading && (!isAuthenticated || user?.role !== "vendor")) {
       throw redirect({ to: "/auth/signin" });
     }
-  }, [isAuthenticated, isLoading, user]);
+  }, [isAuthenticated, isLoading, user?.role]);
 
   const updateField = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -67,8 +68,6 @@ function AddProduct() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
-
     if (!formData.name || !formData.category || !formData.retailPrice || !formData.stock) {
       setError("Please fill in all required fields");
       return;
@@ -77,23 +76,21 @@ function AddProduct() {
     setLoading(true);
     setTimeout(() => {
       setSuccess("Product added successfully!");
-      setFormData({
-        name: "",
-        category: "",
-        retailPrice: "",
-        wholesalePrice: "",
-        bulkPrice: "",
-        stock: "",
-        description: "",
-        specs: "",
-        warrantyMonths: "",
-        deliveryDays: "",
-        deliveryCost: "",
-        authenticity: "Verified original",
-      });
       setLoading(false);
     }, 800);
   };
+
+  const handleSuccessRedirect = () => {
+    setTimeout(() => {
+      navigate({ to: "/vendor/dashboard" });
+    }, 1200);
+  };
+
+  useEffect(() => {
+    if (success) {
+      handleSuccessRedirect();
+    }
+  }, [success]);
 
   if (isLoading) {
     return (

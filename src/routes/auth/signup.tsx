@@ -1,6 +1,6 @@
 "use client";
-import { useState, useMemo } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { Loader2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -256,7 +256,7 @@ function SignUp() {
             <p className="text-center text-sm text-muted-foreground">
               Already have an account?{" "}
               <Button variant="link" className="p-0 h-auto" asChild>
-                <a href="/auth/signin">Sign in</a>
+                <Link to="/auth/signin">Sign in</Link>
               </Button>
             </p>
           </CardFooter>

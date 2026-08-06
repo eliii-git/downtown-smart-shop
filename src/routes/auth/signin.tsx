@@ -1,5 +1,5 @@
 "use client";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Loader2, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/auth/signin")({
   beforeLoad: () => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("dt_auth_token");
-      if (token) throw redirect({ to: "/" });
+      if (token) throw redirect({ to: "/vendor/dashboard" });
     }
   },
 });
@@ -97,7 +97,7 @@ function SignIn() {
             <p className="text-center text-sm text-muted-foreground">
               Don't have an account?{" "}
               <Button variant="link" className="p-0 h-auto" asChild>
-                <a href="/auth/signup">Sign up</a>
+                <Link to="/auth/signup">Sign up</Link>
               </Button>
             </p>
           </CardFooter>

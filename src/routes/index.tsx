@@ -88,10 +88,10 @@ function Index() {
   const { user, isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
-    if (!isLoading && isAuthenticated && user) {
+    if (!isLoading && isAuthenticated && user?.id) {
       navigate({ to: getDashboardPath(user.role) });
     }
-  }, [isAuthenticated, isLoading, user]);
+  }, [isAuthenticated, isLoading, user?.id]);
 
   if (isLoading) {
     return (
