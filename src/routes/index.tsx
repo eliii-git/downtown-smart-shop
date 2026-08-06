@@ -1,5 +1,5 @@
 "use client";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import {
   Accordion,
@@ -84,11 +84,12 @@ function SectionHead({
 }
 
 function Index() {
+  const navigate = useNavigate();
   const { user, isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading && isAuthenticated && user) {
-      window.location.href = getDashboardPath(user.role);
+      navigate({ to: getDashboardPath(user.role) });
     }
   }, [isAuthenticated, isLoading, user]);
 

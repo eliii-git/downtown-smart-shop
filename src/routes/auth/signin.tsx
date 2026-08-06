@@ -1,5 +1,5 @@
 "use client";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Loader2, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { login, getDashboardPath } from "@/lib/auth";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export const Route = createFileRoute("/auth/signin")({
   component: SignIn,
@@ -26,6 +27,8 @@ export const Route = createFileRoute("/auth/signin")({
 });
 
 function SignIn() {
+  const navigate = useNavigate();
+  const { login: authLogin } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -38,7 +41,8 @@ function SignIn() {
     try {
       const result = await login({ email, password });
       localStorage.setItem("dt_auth_token", result.token);
-      window.location.href = getDashboardPath(result.user.role);
+      authLogin(result.user, result.token);
+      navigate({ to: getDashboardPath(result.user.role) });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

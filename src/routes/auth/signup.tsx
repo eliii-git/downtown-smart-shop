@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Loader2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { signup, getDashboardPath } from "@/lib/auth";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { type UserRole } from "@/lib/auth-schema";
 
 export const Route = createFileRoute("/auth/signup")({
@@ -46,6 +47,8 @@ const vehicleTypes = [
 ];
 
 function SignUp() {
+  const navigate = useNavigate();
+  const { login: authLogin } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -107,7 +110,8 @@ function SignUp() {
         defaultAddress: formData.defaultAddress || undefined,
       });
       localStorage.setItem("dt_auth_token", result.token);
-      window.location.href = getDashboardPath(result.user.role);
+      authLogin(result.user, result.token);
+      navigate({ to: getDashboardPath(result.user.role) });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Signup failed");
     } finally {
