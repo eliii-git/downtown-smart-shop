@@ -1,5 +1,5 @@
 "use client";
-import { createFileRoute, redirect, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Loader2, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,21 +14,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { login, getDashboardPath } from "@/lib/auth";
-import { useAuth } from "@/components/auth/AuthProvider";
 
 export const Route = createFileRoute("/auth/signin")({
   component: SignIn,
-  beforeLoad: () => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("dt_auth_token");
-      if (token) throw redirect({ to: "/vendor/dashboard" });
-    }
-  },
 });
 
 function SignIn() {
-  const navigate = useNavigate();
-  const { login: authLogin } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -41,11 +32,11 @@ function SignIn() {
     try {
       const result = await login({ email, password });
       localStorage.setItem("dt_auth_token", result.token);
-      authLogin(result.user, result.token);
-      navigate({ to: getDashboardPath(result.user.role) });
+      setTimeout(() => {
+        window.location.href = getDashboardPath(result.user.role);
+      }, 50);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
-    } finally {
       setLoading(false);
     }
   };
@@ -97,7 +88,7 @@ function SignIn() {
             <p className="text-center text-sm text-muted-foreground">
               Don't have an account?{" "}
               <Button variant="link" className="p-0 h-auto" asChild>
-                <Link to="/auth/signup">Sign up</Link>
+                <a href="/auth/signup">Sign up</a>
               </Button>
             </p>
           </CardFooter>
