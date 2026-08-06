@@ -28,7 +28,6 @@ function SignIn() {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      e.stopPropagation();
       setError("");
       setLoading(true);
       try {
@@ -69,7 +68,6 @@ function SignIn() {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
-                key="signin-email"
                 type="email"
                 placeholder="you@example.com"
                 value={email}
@@ -81,7 +79,6 @@ function SignIn() {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                key="signin-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

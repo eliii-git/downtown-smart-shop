@@ -83,7 +83,6 @@ function SignUp() {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      e.stopPropagation();
       setError("");
       if (!selectedRole) {
         setError("Please select your role");
@@ -146,71 +145,32 @@ function SignUp() {
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    key="signup-name"
-                    value={formData.name}
-                    onChange={(e) => updateField("name", e.target.value)}
-                    required
-                  />
+                  <Input id="name" value={formData.name} onChange={(e) => updateField("name", e.target.value)} required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    key="signup-phone"
-                    type="tel"
-                    placeholder="+256 700 000000"
-                    value={formData.phone}
-                    onChange={(e) => updateField("phone", e.target.value)}
-                    required
-                  />
+                  <Input id="phone" type="tel" placeholder="+256 700 000000" value={formData.phone} onChange={(e) => updateField("phone", e.target.value)} required />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  key="signup-email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => updateField("email", e.target.value)}
-                  required
-                />
+                <Input id="email" type="email" value={formData.email} onChange={(e) => updateField("email", e.target.value)} required />
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    key="signup-password"
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) => updateField("password", e.target.value)}
-                    required
-                  />
+                  <Input id="password" type="password" value={formData.password} onChange={(e) => updateField("password", e.target.value)} required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    key="signup-confirmPassword"
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={(e) => updateField("confirmPassword", e.target.value)}
-                    required
-                  />
+                  <Input id="confirmPassword" type="password" value={formData.confirmPassword} onChange={(e) => updateField("confirmPassword", e.target.value)} required />
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="role">I am a...</Label>
-              <Select
-                key="signup-role-select"
-                value={selectedRole || undefined}
-                onValueChange={(value) => updateField("role", value)}
-              >
+              <Select value={selectedRole || undefined} onValueChange={(value) => updateField("role", value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
@@ -228,41 +188,25 @@ function SignUp() {
             </div>
 
             {selectedRole === "vendor" && (
-              <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4" key="vendor-fields">
+              <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4">
                 <h4 className="text-sm font-semibold">Shop Details</h4>
                 <div className="space-y-2">
                   <Label htmlFor="businessName">Shop / Business Name</Label>
-                  <Input
-                    id="businessName"
-                    key="vendor-businessName"
-                    value={formData.businessName}
-                    onChange={(e) => updateField("businessName", e.target.value)}
-                    required
-                  />
+                  <Input id="businessName" value={formData.businessName} onChange={(e) => updateField("businessName", e.target.value)} required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="shopLocation">Shop Location (e.g., Kikubo Stall 24)</Label>
-                  <Input
-                    id="shopLocation"
-                    key="vendor-shopLocation"
-                    value={formData.shopLocation}
-                    onChange={(e) => updateField("shopLocation", e.target.value)}
-                    required
-                  />
+                  <Input id="shopLocation" value={formData.shopLocation} onChange={(e) => updateField("shopLocation", e.target.value)} required />
                 </div>
               </div>
             )}
 
             {selectedRole === "transport" && (
-              <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4" key="transport-fields">
+              <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4">
                 <h4 className="text-sm font-semibold">Transport Details</h4>
                 <div className="space-y-2">
                   <Label htmlFor="transportCompany">Company</Label>
-                  <Select
-                    key="transport-company"
-                    value={formData.transportCompany || undefined}
-                    onValueChange={(value) => updateField("transportCompany", value)}
-                  >
+                  <Select value={formData.transportCompany || undefined} onValueChange={(value) => updateField("transportCompany", value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select company" />
                     </SelectTrigger>
@@ -277,11 +221,7 @@ function SignUp() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="vehicleType">Vehicle Type</Label>
-                  <Select
-                    key="transport-vehicle"
-                    value={formData.vehicleType || undefined}
-                    onValueChange={(value) => updateField("vehicleType", value)}
-                  >
+                  <Select value={formData.vehicleType || undefined} onValueChange={(value) => updateField("vehicleType", value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select vehicle type" />
                     </SelectTrigger>
@@ -296,30 +236,17 @@ function SignUp() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="licenseNumber">License / Registration Number</Label>
-                  <Input
-                    id="licenseNumber"
-                    key="transport-license"
-                    value={formData.licenseNumber}
-                    onChange={(e) => updateField("licenseNumber", e.target.value)}
-                    required
-                  />
+                  <Input id="licenseNumber" value={formData.licenseNumber} onChange={(e) => updateField("licenseNumber", e.target.value)} required />
                 </div>
               </div>
             )}
 
             {selectedRole === "customer" && (
-              <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4" key="customer-fields">
+              <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4">
                 <h4 className="text-sm font-semibold">Delivery Information</h4>
                 <div className="space-y-2">
                   <Label htmlFor="defaultAddress">Default Delivery Address</Label>
-                  <Input
-                    id="defaultAddress"
-                    key="customer-address"
-                    placeholder="e.g., Nakawa, Kampala"
-                    value={formData.defaultAddress}
-                    onChange={(e) => updateField("defaultAddress", e.target.value)}
-                    required
-                  />
+                  <Input id="defaultAddress" placeholder="e.g., Nakawa, Kampala" value={formData.defaultAddress} onChange={(e) => updateField("defaultAddress", e.target.value)} required />
                 </div>
               </div>
             )}
