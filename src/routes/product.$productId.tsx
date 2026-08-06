@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Heart, Share2, ShieldCheck, Star, Truck } from "lucide-react";
 import { Shell } from "@/components/site/Shell";
 import { TrustScore } from "@/components/site/TrustScore";
-import { getProduct, getShop, products, ugx } from "@/data/marketplace";
+import { getProduct, getShop, products, ugx, type Product } from "@/data/marketplace";
 
 export const Route = createFileRoute("/product/$productId")({
   loader: ({ params }) => {
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/product/$productId")({
 });
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
+  const { product } = Route.useLoaderData() as { product: Product };
   const shop = getShop(product.shopId);
   const related = products.filter((p) => p.id !== product.id && p.category === product.category);
 

@@ -3,7 +3,7 @@ import { Clock, MapPin, MessageCircle, Star, Users } from "lucide-react";
 import { Shell } from "@/components/site/Shell";
 import { ProductCard } from "@/components/site/ProductCard";
 import { TrustScore } from "@/components/site/TrustScore";
-import { getShop, products } from "@/data/marketplace";
+import { getShop, products, type Shop } from "@/data/marketplace";
 
 export const Route = createFileRoute("/shop/$shopId")({
   loader: ({ params }) => {
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/shop/$shopId")({
 });
 
 function ShopPage() {
-  const { shop } = Route.useLoaderData();
+  const { shop } = Route.useLoaderData() as { shop: Shop };
   const items = products.filter((p) => p.shopId === shop.id);
 
   const factors = [
