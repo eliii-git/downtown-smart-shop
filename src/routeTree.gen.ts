@@ -15,6 +15,15 @@ import { Route as MarketRouteImport } from './routes/market'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as ProductProductIdRouteImport } from './routes/product.$productId'
 import { Route as ShopShopIdRouteImport } from './routes/shop.$shopId'
+import { Route as AuthSigninRouteImport } from './routes/auth/signin'
+import { Route as AuthSignupRouteImport } from './routes/auth/signup'
+import { Route as VendorDashboardRouteImport } from './routes/vendor/dashboard'
+import { Route as VendorAddProductRouteImport } from './routes/vendor/add-product'
+import { Route as VendorRevenueRouteImport } from './routes/vendor/revenue'
+import { Route as VendorVideosRouteImport } from './routes/vendor/videos'
+import { Route as VendorMessagesRouteImport } from './routes/vendor/messages'
+import { Route as TransportDashboardRouteImport } from './routes/transport/dashboard'
+import { Route as CustomerDashboardRouteImport } from './routes/customer/dashboard'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +55,51 @@ const ShopShopIdRoute = ShopShopIdRouteImport.update({
   path: '/shop/$shopId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthSigninRoute = AuthSigninRouteImport.update({
+  id: '/auth/signin',
+  path: '/auth/signin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthSignupRoute = AuthSignupRouteImport.update({
+  id: '/auth/signup',
+  path: '/auth/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorDashboardRoute = VendorDashboardRouteImport.update({
+  id: '/vendor/dashboard',
+  path: '/vendor/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorAddProductRoute = VendorAddProductRouteImport.update({
+  id: '/vendor/add-product',
+  path: '/vendor/add-product',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorRevenueRoute = VendorRevenueRouteImport.update({
+  id: '/vendor/revenue',
+  path: '/vendor/revenue',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorVideosRoute = VendorVideosRouteImport.update({
+  id: '/vendor/videos',
+  path: '/vendor/videos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorMessagesRoute = VendorMessagesRouteImport.update({
+  id: '/vendor/messages',
+  path: '/vendor/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TransportDashboardRoute = TransportDashboardRouteImport.update({
+  id: '/transport/dashboard',
+  path: '/transport/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CustomerDashboardRoute = CustomerDashboardRouteImport.update({
+  id: '/customer/dashboard',
+  path: '/customer/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +108,15 @@ export interface FileRoutesByFullPath {
   '/videos': typeof VideosRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/shop/$shopId': typeof ShopShopIdRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/vendor/dashboard': typeof VendorDashboardRoute
+  '/vendor/add-product': typeof VendorAddProductRoute
+  '/vendor/revenue': typeof VendorRevenueRoute
+  '/vendor/videos': typeof VendorVideosRoute
+  '/vendor/messages': typeof VendorMessagesRoute
+  '/transport/dashboard': typeof TransportDashboardRoute
+  '/customer/dashboard': typeof CustomerDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +125,15 @@ export interface FileRoutesByTo {
   '/videos': typeof VideosRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/shop/$shopId': typeof ShopShopIdRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/vendor/dashboard': typeof VendorDashboardRoute
+  '/vendor/add-product': typeof VendorAddProductRoute
+  '/vendor/revenue': typeof VendorRevenueRoute
+  '/vendor/videos': typeof VendorVideosRoute
+  '/vendor/messages': typeof VendorMessagesRoute
+  '/transport/dashboard': typeof TransportDashboardRoute
+  '/customer/dashboard': typeof CustomerDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +143,15 @@ export interface FileRoutesById {
   '/videos': typeof VideosRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/shop/$shopId': typeof ShopShopIdRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/vendor/dashboard': typeof VendorDashboardRoute
+  '/vendor/add-product': typeof VendorAddProductRoute
+  '/vendor/revenue': typeof VendorRevenueRoute
+  '/vendor/videos': typeof VendorVideosRoute
+  '/vendor/messages': typeof VendorMessagesRoute
+  '/transport/dashboard': typeof TransportDashboardRoute
+  '/customer/dashboard': typeof CustomerDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +162,15 @@ export interface FileRouteTypes {
     | '/videos'
     | '/product/$productId'
     | '/shop/$shopId'
+    | '/auth/signin'
+    | '/auth/signup'
+    | '/vendor/dashboard'
+    | '/vendor/add-product'
+    | '/vendor/revenue'
+    | '/vendor/videos'
+    | '/vendor/messages'
+    | '/transport/dashboard'
+    | '/customer/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +179,15 @@ export interface FileRouteTypes {
     | '/videos'
     | '/product/$productId'
     | '/shop/$shopId'
+    | '/auth/signin'
+    | '/auth/signup'
+    | '/vendor/dashboard'
+    | '/vendor/add-product'
+    | '/vendor/revenue'
+    | '/vendor/videos'
+    | '/vendor/messages'
+    | '/transport/dashboard'
+    | '/customer/dashboard'
   id:
     | '__root__'
     | '/'
@@ -97,6 +196,15 @@ export interface FileRouteTypes {
     | '/videos'
     | '/product/$productId'
     | '/shop/$shopId'
+    | '/auth/signin'
+    | '/auth/signup'
+    | '/vendor/dashboard'
+    | '/vendor/add-product'
+    | '/vendor/revenue'
+    | '/vendor/videos'
+    | '/vendor/messages'
+    | '/transport/dashboard'
+    | '/customer/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +214,15 @@ export interface RootRouteChildren {
   VideosRoute: typeof VideosRoute
   ProductProductIdRoute: typeof ProductProductIdRoute
   ShopShopIdRoute: typeof ShopShopIdRoute
+  AuthSigninRoute: typeof AuthSigninRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+  VendorDashboardRoute: typeof VendorDashboardRoute
+  VendorAddProductRoute: typeof VendorAddProductRoute
+  VendorRevenueRoute: typeof VendorRevenueRoute
+  VendorVideosRoute: typeof VendorVideosRoute
+  VendorMessagesRoute: typeof VendorMessagesRoute
+  TransportDashboardRoute: typeof TransportDashboardRoute
+  CustomerDashboardRoute: typeof CustomerDashboardRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +269,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopShopIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/signin': {
+      id: '/auth/signin'
+      path: '/auth/signin'
+      fullPath: '/auth/signin'
+      preLoaderRoute: typeof AuthSigninRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/signup': {
+      id: '/auth/signup'
+      path: '/auth/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor/dashboard': {
+      id: '/vendor/dashboard'
+      path: '/vendor/dashboard'
+      fullPath: '/vendor/dashboard'
+      preLoaderRoute: typeof VendorDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor/add-product': {
+      id: '/vendor/add-product'
+      path: '/vendor/add-product'
+      fullPath: '/vendor/add-product'
+      preLoaderRoute: typeof VendorAddProductRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor/revenue': {
+      id: '/vendor/revenue'
+      path: '/vendor/revenue'
+      fullPath: '/vendor/revenue'
+      preLoaderRoute: typeof VendorRevenueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor/videos': {
+      id: '/vendor/videos'
+      path: '/vendor/videos'
+      fullPath: '/vendor/videos'
+      preLoaderRoute: typeof VendorVideosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor/messages': {
+      id: '/vendor/messages'
+      path: '/vendor/messages'
+      fullPath: '/vendor/messages'
+      preLoaderRoute: typeof VendorMessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/transport/dashboard': {
+      id: '/transport/dashboard'
+      path: '/transport/dashboard'
+      fullPath: '/transport/dashboard'
+      preLoaderRoute: typeof TransportDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/customer/dashboard': {
+      id: '/customer/dashboard'
+      path: '/customer/dashboard'
+      fullPath: '/customer/dashboard'
+      preLoaderRoute: typeof CustomerDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +342,15 @@ const rootRouteChildren: RootRouteChildren = {
   VideosRoute: VideosRoute,
   ProductProductIdRoute: ProductProductIdRoute,
   ShopShopIdRoute: ShopShopIdRoute,
+  AuthSigninRoute: AuthSigninRoute,
+  AuthSignupRoute: AuthSignupRoute,
+  VendorDashboardRoute: VendorDashboardRoute,
+  VendorAddProductRoute: VendorAddProductRoute,
+  VendorRevenueRoute: VendorRevenueRoute,
+  VendorVideosRoute: VendorVideosRoute,
+  VendorMessagesRoute: VendorMessagesRoute,
+  TransportDashboardRoute: TransportDashboardRoute,
+  CustomerDashboardRoute: CustomerDashboardRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
