@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2, UserPlus } from "lucide-react";
@@ -76,7 +77,7 @@ function SignUp() {
         licenseNumber: formData.licenseNumber || undefined,
         defaultAddress: formData.defaultAddress || undefined,
       });
-      localStorage.setItem("auth_token", result.token);
+      localStorage.setItem("dt_auth_token", result.token);
       window.location.href = "/";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Signup failed");

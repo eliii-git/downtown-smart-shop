@@ -1,3 +1,4 @@
+"use client";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { Loader2, LogIn } from "lucide-react";
@@ -17,8 +18,10 @@ import { login } from "@/lib/auth";
 export const Route = createFileRoute("/auth/signin")({
   component: SignIn,
   beforeLoad: () => {
-    const token = localStorage.getItem("auth_token");
-    if (token) throw redirect({ to: "/" });
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("dt_auth_token");
+      if (token) throw redirect({ to: "/" });
+    }
   },
 });
 
@@ -34,7 +37,7 @@ function SignIn() {
     setLoading(true);
     try {
       const result = await login({ email, password });
-      localStorage.setItem("auth_token", result.token);
+      localStorage.setItem("dt_auth_token", result.token);
       window.location.href = "/";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");

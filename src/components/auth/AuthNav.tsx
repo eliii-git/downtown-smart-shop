@@ -16,7 +16,7 @@ export function AuthNav() {
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("auth_token");
+    localStorage.removeItem("dt_auth_token");
     logout();
     router.navigate({ to: "/" });
   };

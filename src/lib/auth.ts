@@ -1,15 +1,33 @@
-import { randomUUID } from "crypto";
+"use client";
 import { loginSchema, signupSchema, type User, type UserRole } from "./auth-schema";
 
-const users: Map<string, User & { password: string }> = new Map();
-const sessions: Map<string, { userId: string; expires: number }> = new Map();
+const USERS_KEY = "dt_users";
+const SESSION_KEY = "dt_auth_token";
+
+function getUsers(): (User & { password: string })[] {
+  if (typeof window === "undefined") return [];
+  const raw = localStorage.getItem(USERS_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+
+function saveUsers(users: (User & { password: string })[]) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function generateId(): string {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
 
 export async function signup(input: unknown): Promise<{ user: User; token: string }> {
   const data = signupSchema.parse(input);
-  const existing = Array.from(users.values()).find((u) => u.email === data.email);
+  const users = getUsers();
+  const existing = users.find((u) => u.email === data.email);
   if (existing) throw new Error("An account with this email already exists");
 
-  const id = randomUUID();
+  const id = generateId();
   const user: User = {
     id,
     email: data.email,
@@ -23,38 +41,43 @@ export async function signup(input: unknown): Promise<{ user: User; token: strin
     licenseNumber: data.licenseNumber,
     defaultAddress: data.defaultAddress,
   };
-  users.set(id, { ...user, password: data.password });
-  const token = randomUUID();
-  sessions.set(token, { userId: id, expires: Date.now() + 7 * 24 * 60 * 60 * 1000 });
-  return { user, token };
+  users.push({ ...user, password: data.password });
+  saveUsers(users);
+
+  localStorage.setItem(SESSION_KEY, id);
+  return { user, token: id };
 }
 
 export async function login(input: unknown): Promise<{ user: User; token: string }> {
   const data = loginSchema.parse(input);
-  const userEntry = Array.from(users.values()).find(
+  const users = getUsers();
+  const userEntry = users.find(
     (u) => u.email === data.email && u.password === data.password
   );
   if (!userEntry) throw new Error("Invalid email or password");
 
   const { password, ...user } = userEntry;
-  const token = randomUUID();
-  sessions.set(token, { userId: user.id, expires: Date.now() + 7 * 24 * 60 * 60 * 1000 });
-  return { user, token };
+  localStorage.setItem(SESSION_KEY, user.id);
+  return { user, token: user.id };
 }
 
-export async function getCurrentUser(token: string | null): Promise<User | null> {
-  if (!token) return null;
-  const session = sessions.get(token);
-  if (!session || session.expires < Date.now()) {
-    sessions.delete(token);
+export async function getCurrentUser(): Promise<User | null> {
+  if (typeof window === "undefined") return null;
+  const userId = localStorage.getItem(SESSION_KEY);
+  if (!userId) return null;
+
+  const users = getUsers();
+  const userEntry = users.find((u) => u.id === userId);
+  if (!userEntry) {
+    localStorage.removeItem(SESSION_KEY);
     return null;
   }
-  const userEntry = users.get(session.userId);
-  if (!userEntry) return null;
+
   const { password, ...user } = userEntry;
   return user;
 }
 
-export async function logout(token: string): Promise<void> {
-  sessions.delete(token);
+export async function logout(): Promise<void> {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(SESSION_KEY);
 }
