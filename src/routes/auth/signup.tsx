@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,18 @@ const roleOptions = [
   { value: "transport" as UserRole, label: "Transport Facilitator", description: "Deliver goods (Safeboda, Farasi)" },
 ];
 
+const transportCompanies = [
+  { value: "safeboda", label: "Safeboda" },
+  { value: "farasi", label: "Farasi" },
+  { value: "other", label: "Other" },
+];
+
+const vehicleTypes = [
+  { value: "boda-boda", label: "Boda Boda" },
+  { value: "truck", label: "Truck" },
+  { value: "pickup", label: "Pickup" },
+];
+
 function SignUp() {
   const [formData, setFormData] = useState({
     email: "",
@@ -51,13 +63,30 @@ function SignUp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const selectedRole = formData.role as UserRole | "";
+
   const updateField = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => {
+      const next = { ...prev, [field]: value };
+      if (field === "role") {
+        next.businessName = "";
+        next.shopLocation = "";
+        next.transportCompany = "";
+        next.vehicleType = "";
+        next.licenseNumber = "";
+        next.defaultAddress = "";
+      }
+      return next;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    if (!selectedRole) {
+      setError("Please select your role");
+      return;
+    }
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -69,7 +98,7 @@ function SignUp() {
         password: formData.password,
         name: formData.name,
         phone: formData.phone,
-        role: formData.role as UserRole,
+        role: selectedRole,
         businessName: formData.businessName || undefined,
         shopLocation: formData.shopLocation || undefined,
         transportCompany: formData.transportCompany || undefined,
@@ -85,8 +114,6 @@ function SignUp() {
       setLoading(false);
     }
   };
-
-  const selectedRole = formData.role as UserRole | "";
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
@@ -135,7 +162,7 @@ function SignUp() {
 
             <div className="space-y-2">
               <Label htmlFor="role">I am a...</Label>
-              <Select value={selectedRole} onValueChange={(value) => updateField("role", value)}>
+              <Select value={selectedRole || undefined} onValueChange={(value) => updateField("role", value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
@@ -171,27 +198,31 @@ function SignUp() {
                 <h4 className="text-sm font-semibold">Transport Details</h4>
                 <div className="space-y-2">
                   <Label htmlFor="transportCompany">Company</Label>
-                  <Select value={formData.transportCompany} onValueChange={(value) => updateField("transportCompany", value)}>
+                  <Select value={formData.transportCompany || undefined} onValueChange={(value) => updateField("transportCompany", value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select company" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="safeboda">Safeboda</SelectItem>
-                      <SelectItem value="farasi">Farasi</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
+                      {transportCompanies.map((company) => (
+                        <SelectItem key={company.value} value={company.value}>
+                          {company.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="vehicleType">Vehicle Type</Label>
-                  <Select value={formData.vehicleType} onValueChange={(value) => updateField("vehicleType", value)}>
+                  <Select value={formData.vehicleType || undefined} onValueChange={(value) => updateField("vehicleType", value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select vehicle type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="boda-boda">Boda Boda</SelectItem>
-                      <SelectItem value="truck">Truck</SelectItem>
-                      <SelectItem value="pickup">Pickup</SelectItem>
+                      {vehicleTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
