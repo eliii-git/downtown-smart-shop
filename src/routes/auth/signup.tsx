@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -46,66 +46,62 @@ const vehicleTypes = [
 ];
 
 function SignUp() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    name: "",
-    phone: "",
-    role: "" as UserRole | "",
-    businessName: "",
-    shopLocation: "",
-    transportCompany: "",
-    vehicleType: "",
-    licenseNumber: "",
-    defaultAddress: "",
-  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState<UserRole | "">("");
 
-  const selectedRole = formData.role;
-
-  const updateField = useCallback((field: string, value: string) => {
-    setFormData((prev) => {
-      const next = { ...prev, [field]: value };
-      if (field === "role") {
-        next.businessName = "";
-        next.shopLocation = "";
-        next.transportCompany = "";
-        next.vehicleType = "";
-        next.licenseNumber = "";
-        next.defaultAddress = "";
-      }
-      return next;
-    });
-  }, []);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmRef = useRef<HTMLInputElement>(null);
+  const businessRef = useRef<HTMLInputElement>(null);
+  const shopRef = useRef<HTMLInputElement>(null);
+  const companyRef = useRef<HTMLInputElement>(null);
+  const vehicleRef = useRef<HTMLInputElement>(null);
+  const licenseRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
       setError("");
-      if (!selectedRole) {
+
+      const nameValue = nameRef.current?.value?.trim() ?? "";
+      const phoneValue = phoneRef.current?.value?.trim() ?? "";
+      const emailValue = emailRef.current?.value?.trim() ?? "";
+      const passwordValue = passwordRef.current?.value ?? "";
+      const confirmValue = confirmRef.current?.value ?? "";
+      const businessValue = businessRef.current?.value?.trim() ?? "";
+      const shopValue = shopRef.current?.value?.trim() ?? "";
+      const companyValue = companyRef.current?.value?.trim() ?? "";
+      const vehicleValue = vehicleRef.current?.value?.trim() ?? "";
+      const licenseValue = licenseRef.current?.value?.trim() ?? "";
+      const addressValue = addressRef.current?.value?.trim() ?? "";
+
+      if (!role) {
         setError("Please select your role");
         return;
       }
-      if (formData.password !== formData.confirmPassword) {
+      if (passwordValue !== confirmValue) {
         setError("Passwords do not match");
         return;
       }
+
       setLoading(true);
       try {
         const result = await signup({
-          email: formData.email,
-          password: formData.password,
-          name: formData.name,
-          phone: formData.phone,
-          role: selectedRole,
-          businessName: formData.businessName || undefined,
-          shopLocation: formData.shopLocation || undefined,
-          transportCompany: formData.transportCompany || undefined,
-          vehicleType: formData.vehicleType || undefined,
-          licenseNumber: formData.licenseNumber || undefined,
-          defaultAddress: formData.defaultAddress || undefined,
+          email: emailValue,
+          password: passwordValue,
+          name: nameValue,
+          phone: phoneValue,
+          role: role as UserRole,
+          businessName: businessValue || undefined,
+          shopLocation: shopValue || undefined,
+          transportCompany: companyValue || undefined,
+          vehicleType: vehicleValue || undefined,
+          licenseNumber: licenseValue || undefined,
+          defaultAddress: addressValue || undefined,
         });
         localStorage.setItem("dt_auth_token", result.token);
         setTimeout(() => {
@@ -116,12 +112,8 @@ function SignUp() {
         setLoading(false);
       }
     },
-    [selectedRole, formData]
+    [role]
   );
-
-  const handleSignInClick = useCallback(() => {
-    window.location.href = "/auth/signin";
-  }, []);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
@@ -144,42 +136,44 @@ function SignUp() {
               <h3 className="text-sm font-semibold text-primary">Account Information</h3>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" value={formData.name} onChange={(e) => updateField("name", e.target.value)} required />
+                  <Label htmlFor="signup-name">Full Name</Label>
+                  <Input ref={nameRef} id="signup-name" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" type="tel" placeholder="+256 700 000000" value={formData.phone} onChange={(e) => updateField("phone", e.target.value)} required />
+                  <Label htmlFor="signup-phone">Phone Number</Label>
+                  <Input ref={phoneRef} id="signup-phone" type="tel" placeholder="+256 700 000000" required />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={formData.email} onChange={(e) => updateField("email", e.target.value)} required />
+                <Label htmlFor="signup-email">Email</Label>
+                <Input ref={emailRef} id="signup-email" type="email" required />
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input id="password" type="password" value={formData.password} onChange={(e) => updateField("password", e.target.value)} required />
+                  <Label htmlFor="signup-password">Password</Label>
+                  <Input ref={passwordRef} id="signup-password" type="password" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input id="confirmPassword" type="password" value={formData.confirmPassword} onChange={(e) => updateField("confirmPassword", e.target.value)} required />
+                  <Label htmlFor="signup-confirm">Confirm Password</Label>
+                  <Input ref={confirmRef} id="signup-confirm" type="password" required />
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="role">I am a...</Label>
-              <Select value={selectedRole || undefined} onValueChange={(value) => updateField("role", value)}>
+              <Label htmlFor="signup-role">I am a...</Label>
+              <Select value={role || undefined} onValueChange={(value) => {
+                setRole(value as UserRole);
+              }}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
                 <SelectContent>
-                  {roleOptions.map((role) => (
-                    <SelectItem key={role.value} value={role.value}>
+                  {roleOptions.map((r) => (
+                    <SelectItem key={r.value} value={r.value}>
                       <div>
-                        <p className="font-medium">{role.label}</p>
-                        <p className="text-xs text-muted-foreground">{role.description}</p>
+                        <p className="font-medium">{r.label}</p>
+                        <p className="text-xs text-muted-foreground">{r.description}</p>
                       </div>
                     </SelectItem>
                   ))}
@@ -187,26 +181,28 @@ function SignUp() {
               </Select>
             </div>
 
-            {selectedRole === "vendor" && (
+            {role === "vendor" && (
               <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4">
                 <h4 className="text-sm font-semibold">Shop Details</h4>
                 <div className="space-y-2">
-                  <Label htmlFor="businessName">Shop / Business Name</Label>
-                  <Input id="businessName" value={formData.businessName} onChange={(e) => updateField("businessName", e.target.value)} required />
+                  <Label htmlFor="vendor-business">Shop / Business Name</Label>
+                  <Input ref={businessRef} id="vendor-business" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="shopLocation">Shop Location (e.g., Kikubo Stall 24)</Label>
-                  <Input id="shopLocation" value={formData.shopLocation} onChange={(e) => updateField("shopLocation", e.target.value)} required />
+                  <Label htmlFor="vendor-location">Shop Location (e.g., Kikubo Stall 24)</Label>
+                  <Input ref={shopRef} id="vendor-location" required />
                 </div>
               </div>
             )}
 
-            {selectedRole === "transport" && (
+            {role === "transport" && (
               <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4">
                 <h4 className="text-sm font-semibold">Transport Details</h4>
                 <div className="space-y-2">
-                  <Label htmlFor="transportCompany">Company</Label>
-                  <Select value={formData.transportCompany || undefined} onValueChange={(value) => updateField("transportCompany", value)}>
+                  <Label htmlFor="transport-company">Company</Label>
+                  <Select value={companyRef.current?.value || undefined} onValueChange={(value) => {
+                    if (companyRef.current) companyRef.current.value = value;
+                  }}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select company" />
                     </SelectTrigger>
@@ -220,8 +216,10 @@ function SignUp() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="vehicleType">Vehicle Type</Label>
-                  <Select value={formData.vehicleType || undefined} onValueChange={(value) => updateField("vehicleType", value)}>
+                  <Label htmlFor="transport-vehicle">Vehicle Type</Label>
+                  <Select value={vehicleRef.current?.value || undefined} onValueChange={(value) => {
+                    if (vehicleRef.current) vehicleRef.current.value = value;
+                  }}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select vehicle type" />
                     </SelectTrigger>
@@ -235,24 +233,24 @@ function SignUp() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="licenseNumber">License / Registration Number</Label>
-                  <Input id="licenseNumber" value={formData.licenseNumber} onChange={(e) => updateField("licenseNumber", e.target.value)} required />
+                  <Label htmlFor="transport-license">License / Registration Number</Label>
+                  <Input ref={licenseRef} id="transport-license" required />
                 </div>
               </div>
             )}
 
-            {selectedRole === "customer" && (
+            {role === "customer" && (
               <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4">
                 <h4 className="text-sm font-semibold">Delivery Information</h4>
                 <div className="space-y-2">
-                  <Label htmlFor="defaultAddress">Default Delivery Address</Label>
-                  <Input id="defaultAddress" placeholder="e.g., Nakawa, Kampala" value={formData.defaultAddress} onChange={(e) => updateField("defaultAddress", e.target.value)} required />
+                  <Label htmlFor="customer-address">Default Delivery Address</Label>
+                  <Input ref={addressRef} id="customer-address" placeholder="e.g., Nakawa, Kampala" required />
                 </div>
               </div>
             )}
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={loading || !selectedRole}>
+            <Button type="submit" className="w-full" disabled={loading || !role}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <UserPlus className="mr-2 h-4 w-4" />
               Create Account
@@ -263,7 +261,9 @@ function SignUp() {
                 type="button"
                 variant="link"
                 className="p-0 h-auto"
-                onClick={handleSignInClick}
+                onClick={() => {
+                  window.location.href = "/auth/signin";
+                }}
               >
                 Sign in
               </Button>

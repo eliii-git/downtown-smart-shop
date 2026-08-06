@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,18 +20,26 @@ export const Route = createFileRoute("/auth/signin")({
 });
 
 function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+      const emailValue = emailRef.current?.value?.trim() ?? "";
+      const passwordValue = passwordRef.current?.value ?? "";
+
+      if (!emailValue || !passwordValue) {
+        setError("Please enter both email and password");
+        return;
+      }
+
       setError("");
       setLoading(true);
       try {
-        const result = await login({ email, password });
+        const result = await login({ email: emailValue, password: passwordValue });
         localStorage.setItem("dt_auth_token", result.token);
         setTimeout(() => {
           window.location.href = getDashboardPath(result.user.role);
@@ -41,12 +49,8 @@ function SignIn() {
         setLoading(false);
       }
     },
-    [email, password]
+    []
   );
-
-  const handleSignUpClick = useCallback(() => {
-    window.location.href = "/auth/signup";
-  }, []);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -65,25 +69,12 @@ function SignIn() {
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+              <Label htmlFor="signin-email">Email</Label>
+              <Input ref={emailRef} id="signin-email" type="email" placeholder="you@example.com" required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <Label htmlFor="signin-password">Password</Label>
+              <Input ref={passwordRef} id="signin-password" type="password" required />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
@@ -98,7 +89,9 @@ function SignIn() {
                 type="button"
                 variant="link"
                 className="p-0 h-auto"
-                onClick={handleSignUpClick}
+                onClick={() => {
+                  window.location.href = "/auth/signup";
+                }}
               >
                 Sign up
               </Button>
