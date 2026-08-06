@@ -4,7 +4,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { Store, Plus, BarChart3, Package, Settings } from "lucide-react";
+import { Store, Plus, BarChart3, Package, Settings, DollarSign, Video, MessageSquare } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/vendor/dashboard")({
@@ -40,7 +40,7 @@ function VendorDashboard() {
   const stats = [
     { label: "Total Products", value: "24", icon: Package, href: "/market" },
     { label: "Orders This Week", value: "12", icon: BarChart3, href: "/market" },
-    { label: "Revenue (UGX)", value: "2.4M", icon: BarChart3, href: "/market" },
+    { label: "Revenue (UGX)", value: "2.4M", icon: BarChart3, href: "/vendor/revenue" },
   ];
 
   return (
@@ -72,14 +72,30 @@ function VendorDashboard() {
           <div className="surface-card p-6">
             <h2 className="text-lg font-semibold">Quick Actions</h2>
             <div className="mt-4 grid gap-3">
-              <Button className="w-full justify-start" variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Add New Product
-              </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <Package className="mr-2 h-4 w-4" />
-                Manage Inventory
-              </Button>
+              <Link to="/vendor/add-product">
+                <Button className="w-full justify-start" variant="outline">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add New Product
+                </Button>
+              </Link>
+              <Link to="/vendor/revenue">
+                <Button className="w-full justify-start" variant="outline">
+                  <DollarSign className="mr-2 h-4 w-4" />
+                  Revenue Monitoring
+                </Button>
+              </Link>
+              <Link to="/vendor/videos">
+                <Button className="w-full justify-start" variant="outline">
+                  <Video className="mr-2 h-4 w-4" />
+                  Manage Videos
+                </Button>
+              </Link>
+              <Link to="/vendor/messages">
+                <Button className="w-full justify-start" variant="outline">
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Messages
+                </Button>
+              </Link>
               <Button className="w-full justify-start" variant="outline">
                 <Settings className="mr-2 h-4 w-4" />
                 Shop Settings
