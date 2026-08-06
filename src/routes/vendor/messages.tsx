@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ArrowLeft, Send, User, Truck, Search, MoreVertical } from "lucide-react";
 import { Link } from "@tanstack/react-router";
@@ -82,12 +83,21 @@ function VendorMessages() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Record<string, { sender: string; text: string; time: string }[]>>(mockMessages);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || user?.role !== "vendor")) {
       throw redirect({ to: "/auth/signin" });
     }
   }, [isAuthenticated, isLoading, user]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, selectedId]);
 
   const selectedConversation = conversations.find((c) => c.id === selectedId);
   const currentMessages = selectedId ? messages[selectedId] || [] : [];
@@ -212,6 +222,7 @@ function VendorMessages() {
                           </div>
                         </div>
                       ))}
+                      <div ref={messagesEndRef} />
                     </div>
                   </div>
 
