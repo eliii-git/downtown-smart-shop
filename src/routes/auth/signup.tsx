@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useCallback, useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Loader2, UserPlus } from "lucide-react";
+import { Loader2, UserPlus, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,6 +32,8 @@ function SignUp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState<UserRole | "">("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -167,11 +169,47 @@ function SignUp() {
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
-                  <Input ref={passwordRef} id="signup-password" type="password" required onChange={persist} />
+                  <div className="relative">
+                    <Input
+                      ref={passwordRef}
+                      id="signup-password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      onChange={persist}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-confirm">Confirm Password</Label>
-                  <Input ref={confirmRef} id="signup-confirm" type="password" required onChange={persist} />
+                  <div className="relative">
+                    <Input
+                      ref={confirmRef}
+                      id="signup-confirm"
+                      type={showConfirm ? "text" : "password"}
+                      required
+                      onChange={persist}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
+                      onClick={() => setShowConfirm(!showConfirm)}
+                      aria-label={showConfirm ? "Hide password" : "Show password"}
+                    >
+                      {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
