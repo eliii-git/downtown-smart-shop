@@ -13,19 +13,20 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as VideosRouteImport } from './routes/videos'
-import { Route as AuthSigninRouteImport } from './routes/auth/signin'
-import { Route as AuthSignupRouteImport } from './routes/auth/signup'
-import { Route as CustomerDashboardRouteImport } from './routes/customer/dashboard'
 import { Route as ProductProductIdRouteImport } from './routes/product.$productId'
 import { Route as ShopShopIdRouteImport } from './routes/shop.$shopId'
-import { Route as TransportDashboardRouteImport } from './routes/transport/dashboard'
-import { Route as VendorAddProductRouteImport } from './routes/vendor/add-product'
+import { Route as AuthSigninRouteImport } from './routes/auth/signin'
+import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as VendorDashboardRouteImport } from './routes/vendor/dashboard'
-import { Route as VendorMessagesRouteImport } from './routes/vendor/messages'
+import { Route as VendorAddProductRouteImport } from './routes/vendor/add-product'
 import { Route as VendorRevenueRouteImport } from './routes/vendor/revenue'
 import { Route as VendorVideosRouteImport } from './routes/vendor/videos'
-import { Route as VideosVideoIdRouteImport } from './routes/videos/$videoId'
+import { Route as VendorMessagesRouteImport } from './routes/vendor/messages'
+import { Route as TransportDashboardRouteImport } from './routes/transport/dashboard'
+import { Route as CustomerDashboardRouteImport } from './routes/customer/dashboard'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as VideosUploadRouteImport } from './routes/videos/upload'
+import { Route as VideosVideoIdRouteImport } from './routes/videos/$videoId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -60,6 +61,11 @@ const AuthSignupRoute = AuthSignupRouteImport.update({
 const CustomerDashboardRoute = CustomerDashboardRouteImport.update({
   id: '/customer/dashboard',
   path: '/customer/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductProductIdRoute = ProductProductIdRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/auth/signup': typeof AuthSignupRoute
   '/customer/dashboard': typeof CustomerDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
+  '/profile': typeof ProfileRoute
   '/shop/$shopId': typeof ShopShopIdRoute
   '/transport/dashboard': typeof TransportDashboardRoute
   '/vendor/add-product': typeof VendorAddProductRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/auth/signup': typeof AuthSignupRoute
   '/customer/dashboard': typeof CustomerDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
+  '/profile': typeof ProfileRoute
   '/shop/$shopId': typeof ShopShopIdRoute
   '/transport/dashboard': typeof TransportDashboardRoute
   '/vendor/add-product': typeof VendorAddProductRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/auth/signup': typeof AuthSignupRoute
   '/customer/dashboard': typeof CustomerDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
+  '/profile': typeof ProfileRoute
   '/shop/$shopId': typeof ShopShopIdRoute
   '/transport/dashboard': typeof TransportDashboardRoute
   '/vendor/add-product': typeof VendorAddProductRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/customer/dashboard'
     | '/product/$productId'
+    | '/profile'
     | '/shop/$shopId'
     | '/transport/dashboard'
     | '/vendor/add-product'
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/customer/dashboard'
     | '/product/$productId'
+    | '/profile'
     | '/shop/$shopId'
     | '/transport/dashboard'
     | '/vendor/add-product'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/customer/dashboard'
     | '/product/$productId'
+    | '/profile'
     | '/shop/$shopId'
     | '/transport/dashboard'
     | '/vendor/add-product'
@@ -240,6 +252,7 @@ export interface RootRouteChildren {
   AuthSignupRoute: typeof AuthSignupRoute
   CustomerDashboardRoute: typeof CustomerDashboardRoute
   ProductProductIdRoute: typeof ProductProductIdRoute
+  ProfileRoute: typeof ProfileRoute
   ShopShopIdRoute: typeof ShopShopIdRoute
   TransportDashboardRoute: typeof TransportDashboardRoute
   VendorAddProductRoute: typeof VendorAddProductRoute
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       path: '/product/$productId'
       fullPath: '/product/$productId'
       preLoaderRoute: typeof ProductProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop/$shopId': {
@@ -395,6 +415,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthSignupRoute: AuthSignupRoute,
   CustomerDashboardRoute: CustomerDashboardRoute,
   ProductProductIdRoute: ProductProductIdRoute,
+  ProfileRoute: ProfileRoute,
   ShopShopIdRoute: ShopShopIdRoute,
   TransportDashboardRoute: TransportDashboardRoute,
   VendorAddProductRoute: VendorAddProductRoute,
