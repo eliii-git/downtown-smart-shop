@@ -280,6 +280,11 @@ export const videoFeed = [
     comments: 213,
     shares: 96,
     hue: 62,
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    thumbnail: "",
+    music: "Original Sound - Kikubo Electronics",
+    duration: "0:30",
+    createdAt: "2 hours ago",
   },
   {
     id: "v2",
@@ -290,6 +295,11 @@ export const videoFeed = [
     comments: 401,
     shares: 288,
     hue: 20,
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    thumbnail: "",
+    music: "Afrobeats Mix - Nakasero Textiles",
+    duration: "0:45",
+    createdAt: "5 hours ago",
   },
   {
     id: "v3",
@@ -300,6 +310,11 @@ export const videoFeed = [
     comments: 118,
     shares: 54,
     hue: 190,
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    thumbnail: "",
+    music: "Tech Review Beat - Kikubo Electronics",
+    duration: "1:00",
+    createdAt: "1 day ago",
   },
   {
     id: "v4",
@@ -310,6 +325,11 @@ export const videoFeed = [
     comments: 74,
     shares: 31,
     hue: 150,
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    thumbnail: "",
+    music: "Kitchen Vibes - Kampala Home",
+    duration: "0:20",
+    createdAt: "2 days ago",
   },
 ];
 

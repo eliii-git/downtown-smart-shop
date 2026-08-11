@@ -24,6 +24,8 @@ import { Route as VendorVideosRouteImport } from './routes/vendor/videos'
 import { Route as VendorMessagesRouteImport } from './routes/vendor/messages'
 import { Route as TransportDashboardRouteImport } from './routes/transport/dashboard'
 import { Route as CustomerDashboardRouteImport } from './routes/customer/dashboard'
+import { Route as VideosUploadRouteImport } from './routes/videos/upload'
+import { Route as VideosVideoIdRouteImport } from './routes/videos/$videoId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -100,6 +102,16 @@ const CustomerDashboardRoute = CustomerDashboardRouteImport.update({
   path: '/customer/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VideosUploadRoute = VideosUploadRouteImport.update({
+  id: '/videos/upload',
+  path: '/videos/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideosVideoIdRoute = VideosVideoIdRouteImport.update({
+  id: '/videos/$videoId',
+  path: '/videos/$videoId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -117,6 +129,8 @@ export interface FileRoutesByFullPath {
   '/vendor/messages': typeof VendorMessagesRoute
   '/transport/dashboard': typeof TransportDashboardRoute
   '/customer/dashboard': typeof CustomerDashboardRoute
+  '/videos/upload': typeof VideosUploadRoute
+  '/videos/$videoId': typeof VideosVideoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -134,6 +148,8 @@ export interface FileRoutesByTo {
   '/vendor/messages': typeof VendorMessagesRoute
   '/transport/dashboard': typeof TransportDashboardRoute
   '/customer/dashboard': typeof CustomerDashboardRoute
+  '/videos/upload': typeof VideosUploadRoute
+  '/videos/$videoId': typeof VideosVideoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -152,6 +168,8 @@ export interface FileRoutesById {
   '/vendor/messages': typeof VendorMessagesRoute
   '/transport/dashboard': typeof TransportDashboardRoute
   '/customer/dashboard': typeof CustomerDashboardRoute
+  '/videos/upload': typeof VideosUploadRoute
+  '/videos/$videoId': typeof VideosVideoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -171,6 +189,8 @@ export interface FileRouteTypes {
     | '/vendor/messages'
     | '/transport/dashboard'
     | '/customer/dashboard'
+    | '/videos/upload'
+    | '/videos/$videoId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -188,6 +208,8 @@ export interface FileRouteTypes {
     | '/vendor/messages'
     | '/transport/dashboard'
     | '/customer/dashboard'
+    | '/videos/upload'
+    | '/videos/$videoId'
   id:
     | '__root__'
     | '/'
@@ -205,6 +227,8 @@ export interface FileRouteTypes {
     | '/vendor/messages'
     | '/transport/dashboard'
     | '/customer/dashboard'
+    | '/videos/upload'
+    | '/videos/$videoId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -223,6 +247,8 @@ export interface RootRouteChildren {
   VendorMessagesRoute: typeof VendorMessagesRoute
   TransportDashboardRoute: typeof TransportDashboardRoute
   CustomerDashboardRoute: typeof CustomerDashboardRoute
+  VideosUploadRoute: typeof VideosUploadRoute
+  VideosVideoIdRoute: typeof VideosVideoIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -332,6 +358,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomerDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/videos/upload': {
+      id: '/videos/upload'
+      path: '/videos/upload'
+      fullPath: '/videos/upload'
+      preLoaderRoute: typeof VideosUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/videos/$videoId': {
+      id: '/videos/$videoId'
+      path: '/videos/$videoId'
+      fullPath: '/videos/$videoId'
+      preLoaderRoute: typeof VideosVideoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -351,6 +391,8 @@ const rootRouteChildren: RootRouteChildren = {
   VendorMessagesRoute: VendorMessagesRoute,
   TransportDashboardRoute: TransportDashboardRoute,
   CustomerDashboardRoute: CustomerDashboardRoute,
+  VideosUploadRoute: VideosUploadRoute,
+  VideosVideoIdRoute: VideosVideoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
