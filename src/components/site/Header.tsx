@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingBag } from "lucide-react";
+import { Zap } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { AuthNav } from "@/components/auth/AuthNav";
 
@@ -9,10 +9,9 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link to="/" className="flex min-w-0 items-center gap-2.5">
           <span
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-primary-foreground"
-            style={{ backgroundImage: "var(--gradient-gold)" }}
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#39FF14] text-[#0a0a0a]"
           >
-            <ShoppingBag className="h-[18px] w-[18px]" />
+            <Zap className="h-[18px] w-[18px] fill-current" />
           </span>
           <span className="font-display truncate text-base font-bold tracking-tight">
             DownTown <span className="text-muted-foreground">UG</span>
