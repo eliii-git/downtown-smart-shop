@@ -1,16 +1,17 @@
-"use client";
 import { loginSchema, signupSchema, type User, type UserRole } from "./auth-schema";
 
 const USERS_KEY = "dt_users";
 const SESSION_KEY = "dt_auth_token";
 
-function getUsers(): (User & { password: string })[] {
+type StoredUser = User & { password: string };
+
+function getUsers(): StoredUser[] {
   if (typeof window === "undefined") return [];
   const raw = localStorage.getItem(USERS_KEY);
   return raw ? JSON.parse(raw) : [];
 }
 
-function saveUsers(users: (User & { password: string })[]) {
+function saveUsers(users: StoredUser[]) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 
@@ -82,15 +83,68 @@ export async function logout(): Promise<void> {
   localStorage.removeItem(SESSION_KEY);
 }
 
-export function getDashboardPath(role: UserRole): string {
-  switch (role) {
-    case "vendor":
-      return "/vendor/dashboard";
-    case "transport":
-      return "/transport/dashboard";
-    case "customer":
-      return "/customer/dashboard";
-    default:
-      return "/";
+export async function syncToCloud(): Promise<void> {
+  if (typeof window === "undefined") return;
+  
+  const cloudUrl = import.meta.env.VITE_DATABASE_URL;
+  const apiKey = import.meta.env.VITE_DATABASE_API_KEY;
+  
+  if (!cloudUrl || !apiKey) {
+    console.log("Cloud sync skipped: no DATABASE_URL or API_KEY configured");
+    return;
+  }
+
+  try {
+    const users = getUsers();
+    const sessionToken = localStorage.getItem(SESSION_KEY);
+    
+    await fetch(cloudUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        action: "sync",
+        users,
+        sessionToken,
+        timestamp: Date.now(),
+      }),
+    });
+  } catch (error) {
+    console.error("Cloud sync failed:", error);
+  }
+}
+
+export async function loadFromCloud(): Promise<void> {
+  if (typeof window === "undefined") return;
+  
+  const cloudUrl = import.meta.env.VITE_DATABASE_URL;
+  const apiKey = import.meta.env.VITE_DATABASE_API_KEY;
+  
+  if (!cloudUrl || !apiKey) {
+    console.log("Cloud load skipped: no DATABASE_URL or API_KEY configured");
+    return;
+  }
+
+  try {
+    const response = await fetch(cloudUrl, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+      },
+    });
+
+    if (!response.ok) return;
+
+    const data = await response.json();
+    if (data.users && Array.isArray(data.users)) {
+      saveUsers(data.users);
+      if (data.sessionToken) {
+        localStorage.setItem(SESSION_KEY, data.sessionToken);
+      }
+    }
+  } catch (error) {
+    console.error("Cloud load failed:", error);
   }
 }
