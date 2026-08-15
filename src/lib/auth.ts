@@ -51,7 +51,6 @@ export async function signup(input: unknown): Promise<{ user: User; token: strin
     ...(data.businessName !== undefined ? { businessName: data.businessName } : {}),
     ...(data.shopLocation !== undefined ? { shopLocation: data.shopLocation } : {}),
     ...(data.transportCompany !== undefined ? { transportCompany: data.transportCompany } : {}),
-    ...(data.vehicleType !== undefined ? { vehicleType: data.vehicleType } : {}),
     ...(data.licenseNumber !== undefined ? { licenseNumber: data.licenseNumber } : {}),
     ...(data.defaultAddress !== undefined ? { defaultAddress: data.defaultAddress } : {}),
   };

@@ -56,11 +56,11 @@ function TransportDashboard() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Transport Dashboard</h1>
           <p className="mt-1 text-muted-foreground">Welcome back, {user.name}</p>
-          {user.transportCompany && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              {user.transportCompany} · {user.vehicleType} · {user.licenseNumber}
-            </p>
-          )}
+              {user.transportCompany && (
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {user.transportCompany} · {user.licenseNumber}
+                </p>
+              )}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

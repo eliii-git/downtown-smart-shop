@@ -47,9 +47,7 @@ function SignUp() {
   const confirmRef = useRef<HTMLInputElement>(null);
   const businessRef = useRef<HTMLInputElement>(null);
   const shopRef = useRef<HTMLInputElement>(null);
-  const transportCompanyRef = useRef<HTMLSelectElement>(null);
-  const vehicleTypeRef = useRef<HTMLInputElement>(null);
-  const licenseRef = useRef<HTMLInputElement>(null);
+
   const addressRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -65,7 +63,6 @@ function SignUp() {
       if (draft.businessName && businessRef.current) businessRef.current.value = draft.businessName;
       if (draft.shopLocation && shopRef.current) shopRef.current.value = draft.shopLocation;
       if (draft.transportCompany && transportCompanyRef.current) transportCompanyRef.current.value = draft.transportCompany;
-      if (draft.vehicleType && vehicleTypeRef.current) vehicleTypeRef.current.value = draft.vehicleType;
       if (draft.licenseNumber && licenseRef.current) licenseRef.current.value = draft.licenseNumber;
       if (draft.defaultAddress && addressRef.current) addressRef.current.value = draft.defaultAddress;
       if (draft.role) setRole(draft.role);
@@ -85,7 +82,6 @@ function SignUp() {
           businessName: businessRef.current?.value,
           shopLocation: shopRef.current?.value,
           transportCompany: transportCompanyRef.current?.value,
-          vehicleType: vehicleTypeRef.current?.value,
           licenseNumber: licenseRef.current?.value,
           defaultAddress: addressRef.current?.value,
           role,
@@ -107,7 +103,6 @@ function SignUp() {
       const businessValue = businessRef.current?.value?.trim() ?? "";
       const shopValue = shopRef.current?.value?.trim() ?? "";
       const transportCompanyValue = transportCompanyRef.current?.value ?? "";
-      const vehicleTypeValue = vehicleTypeRef.current?.value?.trim() ?? "";
       const licenseValue = licenseRef.current?.value?.trim() ?? "";
       const addressValue = addressRef.current?.value?.trim() ?? "";
 
@@ -131,7 +126,6 @@ function SignUp() {
           businessName: businessValue || undefined,
           shopLocation: shopValue || undefined,
           transportCompany: transportCompanyValue || undefined,
-          vehicleType: vehicleTypeValue || undefined,
           licenseNumber: licenseValue || undefined,
           defaultAddress: addressValue || undefined,
         });
@@ -282,10 +276,6 @@ function SignUp() {
                       </option>
                     ))}
                   </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="transport-vehicle">Vehicle Type (e.g., Boda Boda, Truck)</Label>
-                  <Input ref={vehicleTypeRef} id="transport-vehicle" required onChange={persist} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="transport-license">License / Registration Number</Label>

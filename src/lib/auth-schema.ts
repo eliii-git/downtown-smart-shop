@@ -18,7 +18,7 @@ export const signupSchema = z.object({
 }).refine(
   (data) => {
     if (data.role === "vendor") return !!data.businessName && !!data.shopLocation;
-    if (data.role === "transport") return !!data.transportCompany && !!data.vehicleType && !!data.licenseNumber;
+    if (data.role === "transport") return !!data.transportCompany && !!data.licenseNumber;
     if (data.role === "customer") return !!data.defaultAddress;
     return true;
   },
