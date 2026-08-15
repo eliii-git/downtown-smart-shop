@@ -1,11 +1,11 @@
 "use client";
 import { useEffect } from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ShoppingBag, Heart, MapPin, Clock, Star } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/customer/dashboard")({
   component: CustomerDashboard,
@@ -13,12 +13,13 @@ export const Route = createFileRoute("/customer/dashboard")({
 
 function CustomerDashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || user?.role !== "customer")) {
-      throw redirect({ to: "/auth/signin" });
+      navigate({ to: "/auth/signin", replace: true });
     }
-  }, [isAuthenticated, isLoading, user?.role]);
+  }, [isAuthenticated, isLoading, user?.role, navigate]);
 
   if (isLoading) {
     return (

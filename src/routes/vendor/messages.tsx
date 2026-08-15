@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ArrowLeft, Send, User, Truck, Search, MoreVertical } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/vendor/messages")({
   component: VendorMessages,
@@ -79,6 +79,7 @@ const mockMessages: Record<string, { sender: string; text: string; time: string 
 
 function VendorMessages() {
   const { isAuthenticated, isLoading, user } = useAuth();
+  const navigate = useNavigate();
   const [conversations, setConversations] = useState(mockConversations);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
@@ -91,9 +92,9 @@ function VendorMessages() {
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || user?.role !== "vendor")) {
-      throw redirect({ to: "/auth/signin" });
+      navigate({ to: "/auth/signin", replace: true });
     }
-  }, [isAuthenticated, isLoading, user?.role]);
+  }, [isAuthenticated, isLoading, user?.role, navigate]);
 
   useEffect(() => {
     scrollToBottom();

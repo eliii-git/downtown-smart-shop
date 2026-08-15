@@ -78,6 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "theme-color", content: "#39FF14" },
       { title: "DownTown Uganda" },
       {
         name: "description",
@@ -108,7 +109,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "shortcut icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "apple-touch-icon", href: "/favicon.svg" },
       { rel: "manifest", href: "/manifest.json" },
-      { name: "theme-color", content: "#39FF14" },
     ],
   }),
   shellComponent: RootShell,

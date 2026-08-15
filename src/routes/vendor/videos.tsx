@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ArrowLeft, Play, Plus, Trash2, Eye } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/vendor/videos")({
   component: VendorVideos,
@@ -20,13 +20,14 @@ const mockVideos = [
 
 function VendorVideos() {
   const { isAuthenticated, isLoading, user } = useAuth();
+  const navigate = useNavigate();
   const [videos, setVideos] = useState(mockVideos);
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || user?.role !== "vendor")) {
-      throw redirect({ to: "/auth/signin" });
+      navigate({ to: "/auth/signin", replace: true });
     }
-  }, [isAuthenticated, isLoading, user?.role]);
+  }, [isAuthenticated, isLoading, user?.role, navigate]);
 
   const handleDelete = (id: string) => {
     setVideos((prev) => prev.filter((v) => v.id !== id));
