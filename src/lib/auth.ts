@@ -158,3 +158,45 @@ export async function loadFromCloud(): Promise<void> {
     console.error("Cloud load failed:", error);
   }
 }
+
+const DEMO_USERS: StoredUser[] = [
+  {
+    id: "demo-vendor-1",
+    email: "vendor@demo.dt",
+    password: "vendor123",
+    name: "Amina Nakato",
+    phone: "+256 700 111111",
+    role: "vendor",
+    businessName: "Kikubo Demo Electronics",
+    shopLocation: "Nakivubo Road, Kikubo",
+  },
+  {
+    id: "demo-transport-1",
+    email: "transporter@demo.dt",
+    password: "transporter123",
+    name: "James Okello",
+    phone: "+256 700 222222",
+    role: "transport",
+    transportCompany: "Farasi",
+    licenseNumber: "DL-2024-001",
+  },
+  {
+    id: "demo-customer-1",
+    email: "customer@demo.dt",
+    password: "customer123",
+    name: "Grace Amongin",
+    phone: "+256 700 333333",
+    role: "customer",
+    defaultAddress: "Nakawa, Kampala",
+  },
+];
+
+export function seedDemoUsers(): void {
+  if (typeof window === "undefined") return;
+  const existing = getUsers();
+  const existingEmails = new Set(existing.map((u) => u.email));
+  const toAdd = DEMO_USERS.filter((u) => !existingEmails.has(u.email));
+  if (toAdd.length > 0) {
+    saveUsers([...existing, ...toAdd]);
+  }
+}

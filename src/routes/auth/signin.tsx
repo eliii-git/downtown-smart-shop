@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { login, getDashboardPath } from "@/lib/auth";
+import { login, getDashboardPath, seedDemoUsers } from "@/lib/auth";
 
 const STORAGE_KEY = "dt_signin_draft";
 
@@ -35,42 +35,47 @@ function SignIn() {
       const draft = JSON.parse(raw);
       if (emailRef.current && draft.email) emailRef.current.value = draft.email;
       if (passwordRef.current && draft.password) passwordRef.current.value = draft.password;
-    } catch {}
+    } catch {
+      // ignore localStorage errors
+    }
+  }, []);
+
+  useEffect(() => {
+    seedDemoUsers();
   }, []);
 
   const persist = (email?: string, password?: string) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ email, password }));
-    } catch {}
+    } catch {
+      // ignore localStorage errors
+    }
   };
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      const emailValue = emailRef.current?.value?.trim() ?? "";
-      const passwordValue = passwordRef.current?.value ?? "";
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    const emailValue = emailRef.current?.value?.trim() ?? "";
+    const passwordValue = passwordRef.current?.value ?? "";
 
-      if (!emailValue || !passwordValue) {
-        setError("Please enter both email and password");
-        return;
-      }
+    if (!emailValue || !passwordValue) {
+      setError("Please enter both email and password");
+      return;
+    }
 
-      setError("");
-      setLoading(true);
-      try {
-        const result = await login({ email: emailValue, password: passwordValue });
-        localStorage.removeItem(STORAGE_KEY);
-        localStorage.setItem("dt_auth_token", result.token);
-        setTimeout(() => {
-          window.location.href = getDashboardPath(result.user.role);
-        }, 50);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Login failed");
-        setLoading(false);
-      }
-    },
-    []
-  );
+    setError("");
+    setLoading(true);
+    try {
+      const result = await login({ email: emailValue, password: passwordValue });
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.setItem("dt_auth_token", result.token);
+      setTimeout(() => {
+        window.location.href = getDashboardPath(result.user.role);
+      }, 50);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed");
+      setLoading(false);
+    }
+  }, []);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

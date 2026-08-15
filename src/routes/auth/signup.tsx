@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { signup, getDashboardPath } from "@/lib/auth";
+import { signup, getDashboardPath, seedDemoUsers } from "@/lib/auth";
 import { type UserRole } from "@/lib/auth-schema";
 
 const STORAGE_KEY = "dt_signup_draft";
@@ -78,6 +78,10 @@ function SignUp() {
     } catch {
       // ignore localStorage errors
     }
+  }, []);
+
+  useEffect(() => {
+    seedDemoUsers();
   }, []);
 
   const persist = () => {
