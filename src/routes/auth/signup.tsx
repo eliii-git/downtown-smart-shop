@@ -21,7 +21,12 @@ const STORAGE_KEY = "dt_signup_draft";
 const roleOptions = [
   { value: "customer" as UserRole, label: "Customer", description: "Buy products from shops" },
   { value: "vendor" as UserRole, label: "Vendor / Shop Owner", description: "Sell products on DownTown" },
-  { value: "transport" as UserRole, label: "Transport Facilitator", description: "Deliver goods (Safeboda, Farasi)" },
+  { value: "transport" as UserRole, label: "Transport Facilitator", description: "Deliver goods (Farasi, Safeboda)" },
+];
+
+const transportCompanies = [
+  { value: "Farasi", label: "Farasi" },
+  { value: "Safeboda", label: "Safeboda" },
 ];
 
 export const Route = createFileRoute("/auth/signup")({
@@ -42,6 +47,8 @@ function SignUp() {
   const confirmRef = useRef<HTMLInputElement>(null);
   const businessRef = useRef<HTMLInputElement>(null);
   const shopRef = useRef<HTMLInputElement>(null);
+  const transportCompanyRef = useRef<HTMLSelectElement>(null);
+  const vehicleTypeRef = useRef<HTMLInputElement>(null);
   const licenseRef = useRef<HTMLInputElement>(null);
   const addressRef = useRef<HTMLInputElement>(null);
 
@@ -57,6 +64,8 @@ function SignUp() {
       if (draft.confirmPassword && confirmRef.current) confirmRef.current.value = draft.confirmPassword;
       if (draft.businessName && businessRef.current) businessRef.current.value = draft.businessName;
       if (draft.shopLocation && shopRef.current) shopRef.current.value = draft.shopLocation;
+      if (draft.transportCompany && transportCompanyRef.current) transportCompanyRef.current.value = draft.transportCompany;
+      if (draft.vehicleType && vehicleTypeRef.current) vehicleTypeRef.current.value = draft.vehicleType;
       if (draft.licenseNumber && licenseRef.current) licenseRef.current.value = draft.licenseNumber;
       if (draft.defaultAddress && addressRef.current) addressRef.current.value = draft.defaultAddress;
       if (draft.role) setRole(draft.role);
@@ -75,6 +84,8 @@ function SignUp() {
           confirmPassword: confirmRef.current?.value,
           businessName: businessRef.current?.value,
           shopLocation: shopRef.current?.value,
+          transportCompany: transportCompanyRef.current?.value,
+          vehicleType: vehicleTypeRef.current?.value,
           licenseNumber: licenseRef.current?.value,
           defaultAddress: addressRef.current?.value,
           role,
@@ -95,6 +106,8 @@ function SignUp() {
       const confirmValue = confirmRef.current?.value ?? "";
       const businessValue = businessRef.current?.value?.trim() ?? "";
       const shopValue = shopRef.current?.value?.trim() ?? "";
+      const transportCompanyValue = transportCompanyRef.current?.value ?? "";
+      const vehicleTypeValue = vehicleTypeRef.current?.value?.trim() ?? "";
       const licenseValue = licenseRef.current?.value?.trim() ?? "";
       const addressValue = addressRef.current?.value?.trim() ?? "";
 
@@ -117,6 +130,8 @@ function SignUp() {
           role: role as UserRole,
           businessName: businessValue || undefined,
           shopLocation: shopValue || undefined,
+          transportCompany: transportCompanyValue || undefined,
+          vehicleType: vehicleTypeValue || undefined,
           licenseNumber: licenseValue || undefined,
           defaultAddress: addressValue || undefined,
         });
@@ -251,6 +266,27 @@ function SignUp() {
             {role === "transport" && (
               <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4">
                 <h4 className="text-sm font-semibold">Transport Details</h4>
+                <div className="space-y-2">
+                  <Label htmlFor="transport-company">Transport Company</Label>
+                  <select
+                    id="transport-company"
+                    ref={transportCompanyRef}
+                    required
+                    onChange={persist}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    <option value="">Select company</option>
+                    {transportCompanies.map((c) => (
+                      <option key={c.value} value={c.value}>
+                        {c.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="transport-vehicle">Vehicle Type (e.g., Boda Boda, Truck)</Label>
+                  <Input ref={vehicleTypeRef} id="transport-vehicle" required onChange={persist} />
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="transport-license">License / Registration Number</Label>
                   <Input ref={licenseRef} id="transport-license" required onChange={persist} />
