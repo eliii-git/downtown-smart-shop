@@ -20,16 +20,8 @@ const STORAGE_KEY = "dt_signup_draft";
 
 const roleOptions = [
   { value: "customer" as UserRole, label: "Customer", description: "Buy products from shops" },
-  {
-    value: "vendor" as UserRole,
-    label: "Vendor / Shop Owner",
-    description: "Sell products on DownTown",
-  },
-  {
-    value: "transport" as UserRole,
-    label: "Transport Facilitator",
-    description: "Deliver goods (Farasi, Safeboda)",
-  },
+  { value: "vendor" as UserRole, label: "Vendor / Shop Owner", description: "Sell products on DownTown" },
+  { value: "transport" as UserRole, label: "Transport Facilitator", description: "Deliver goods (Farasi, Safeboda)" },
 ];
 
 const transportCompanies = [
@@ -55,8 +47,8 @@ function SignUp() {
   const confirmRef = useRef<HTMLInputElement>(null);
   const businessRef = useRef<HTMLInputElement>(null);
   const shopRef = useRef<HTMLInputElement>(null);
-
-  const addressRef = useRef<HTMLInputElement>(null);
+  const transportCompanyRef = useRef<HTMLSelectElement>(null);
+  const licenseRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -67,15 +59,11 @@ function SignUp() {
       if (draft.phone && phoneRef.current) phoneRef.current.value = draft.phone;
       if (draft.email && emailRef.current) emailRef.current.value = draft.email;
       if (draft.password && passwordRef.current) passwordRef.current.value = draft.password;
-      if (draft.confirmPassword && confirmRef.current)
-        confirmRef.current.value = draft.confirmPassword;
+      if (draft.confirmPassword && confirmRef.current) confirmRef.current.value = draft.confirmPassword;
       if (draft.businessName && businessRef.current) businessRef.current.value = draft.businessName;
       if (draft.shopLocation && shopRef.current) shopRef.current.value = draft.shopLocation;
-      if (draft.transportCompany && transportCompanyRef.current)
-        transportCompanyRef.current.value = draft.transportCompany;
+      if (draft.transportCompany && transportCompanyRef.current) transportCompanyRef.current.value = draft.transportCompany;
       if (draft.licenseNumber && licenseRef.current) licenseRef.current.value = draft.licenseNumber;
-      if (draft.defaultAddress && addressRef.current)
-        addressRef.current.value = draft.defaultAddress;
       if (draft.role) setRole(draft.role);
     } catch {
       // ignore localStorage errors
@@ -96,7 +84,6 @@ function SignUp() {
           shopLocation: shopRef.current?.value,
           transportCompany: transportCompanyRef.current?.value,
           licenseNumber: licenseRef.current?.value,
-          defaultAddress: addressRef.current?.value,
           role,
         }),
       );
@@ -119,7 +106,6 @@ function SignUp() {
       const shopValue = shopRef.current?.value?.trim() ?? "";
       const transportCompanyValue = transportCompanyRef.current?.value ?? "";
       const licenseValue = licenseRef.current?.value?.trim() ?? "";
-      const addressValue = addressRef.current?.value?.trim() ?? "";
 
       if (!role) {
         setError("Please select your role");
@@ -142,7 +128,6 @@ function SignUp() {
           shopLocation: shopValue || undefined,
           transportCompany: transportCompanyValue || undefined,
           licenseNumber: licenseValue || undefined,
-          defaultAddress: addressValue || undefined,
         });
         localStorage.removeItem(STORAGE_KEY);
         localStorage.setItem("dt_auth_token", result.token);
@@ -183,14 +168,7 @@ function SignUp() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-phone">Phone Number</Label>
-                  <Input
-                    ref={phoneRef}
-                    id="signup-phone"
-                    type="tel"
-                    placeholder="+256 700 000000"
-                    required
-                    onChange={persist}
-                  />
+                  <Input ref={phoneRef} id="signup-phone" type="tel" placeholder="+256 700 000000" required onChange={persist} />
                 </div>
               </div>
               <div className="space-y-2">
@@ -302,22 +280,6 @@ function SignUp() {
                 <div className="space-y-2">
                   <Label htmlFor="transport-license">License / Registration Number</Label>
                   <Input ref={licenseRef} id="transport-license" required onChange={persist} />
-                </div>
-              </div>
-            )}
-
-            {role === "customer" && (
-              <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4">
-                <h4 className="text-sm font-semibold">Delivery Information</h4>
-                <div className="space-y-2">
-                  <Label htmlFor="customer-address">Default Delivery Address</Label>
-                  <Input
-                    ref={addressRef}
-                    id="customer-address"
-                    placeholder="e.g., Nakawa, Kampala"
-                    required
-                    onChange={persist}
-                  />
                 </div>
               </div>
             )}
