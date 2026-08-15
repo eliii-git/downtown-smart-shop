@@ -20,8 +20,16 @@ const STORAGE_KEY = "dt_signup_draft";
 
 const roleOptions = [
   { value: "customer" as UserRole, label: "Customer", description: "Buy products from shops" },
-  { value: "vendor" as UserRole, label: "Vendor / Shop Owner", description: "Sell products on DownTown" },
-  { value: "transport" as UserRole, label: "Transport Facilitator", description: "Deliver goods (Farasi, Safeboda)" },
+  {
+    value: "vendor" as UserRole,
+    label: "Vendor / Shop Owner",
+    description: "Sell products on DownTown",
+  },
+  {
+    value: "transport" as UserRole,
+    label: "Transport Facilitator",
+    description: "Deliver goods (Farasi, Safeboda)",
+  },
 ];
 
 const transportCompanies = [
@@ -59,10 +67,12 @@ function SignUp() {
       if (draft.phone && phoneRef.current) phoneRef.current.value = draft.phone;
       if (draft.email && emailRef.current) emailRef.current.value = draft.email;
       if (draft.password && passwordRef.current) passwordRef.current.value = draft.password;
-      if (draft.confirmPassword && confirmRef.current) confirmRef.current.value = draft.confirmPassword;
+      if (draft.confirmPassword && confirmRef.current)
+        confirmRef.current.value = draft.confirmPassword;
       if (draft.businessName && businessRef.current) businessRef.current.value = draft.businessName;
       if (draft.shopLocation && shopRef.current) shopRef.current.value = draft.shopLocation;
-      if (draft.transportCompany && transportCompanyRef.current) transportCompanyRef.current.value = draft.transportCompany;
+      if (draft.transportCompany && transportCompanyRef.current)
+        transportCompanyRef.current.value = draft.transportCompany;
       if (draft.licenseNumber && licenseRef.current) licenseRef.current.value = draft.licenseNumber;
       if (draft.role) setRole(draft.role);
     } catch {
@@ -168,7 +178,14 @@ function SignUp() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-phone">Phone Number</Label>
-                  <Input ref={phoneRef} id="signup-phone" type="tel" placeholder="+256 700 000000" required onChange={persist} />
+                  <Input
+                    ref={phoneRef}
+                    id="signup-phone"
+                    type="tel"
+                    placeholder="+256 700 000000"
+                    required
+                    onChange={persist}
+                  />
                 </div>
               </div>
               <div className="space-y-2">
