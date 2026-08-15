@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Heart, MessageCircle, Share2, Bookmark, Play, Music, ShoppingBag, UserPlus } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getShop, getProduct, ugx, videoFeed } from "@/data/marketplace";
 import { useAuth } from "@/components/auth/AuthProvider";

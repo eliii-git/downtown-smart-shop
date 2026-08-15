@@ -25,6 +25,14 @@ function VideosPage() {
 
   const currentVideo = videoFeed[currentIndex];
 
+  if (!currentVideo) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-black">
+        <p className="text-white">No videos available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="relative h-screen w-full bg-black">
       <div className="absolute inset-x-0 top-0 z-30 flex items-center justify-between bg-gradient-to-b from-black/60 to-transparent p-4 pb-8">

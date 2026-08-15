@@ -270,7 +270,23 @@ export const products: Product[] = [
   },
 ];
 
-export const videoFeed = [
+export type VideoFeedItem = {
+  id: string;
+  shopId: string;
+  productId: string;
+  caption: string;
+  likes: number;
+  comments: number;
+  shares: number;
+  hue: number;
+  videoUrl: string;
+  thumbnail: string;
+  music: string;
+  duration: string;
+  createdAt: string;
+};
+
+export const videoFeed: VideoFeedItem[] = [
   {
     id: "v1",
     shopId: "kikubo-electronics",

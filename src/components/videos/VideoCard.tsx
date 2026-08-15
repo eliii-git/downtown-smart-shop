@@ -41,11 +41,14 @@ export function VideoCard({ video, isActive, onNext, onPrev }: VideoCardProps) {
   }, [isActive]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
+    const touch = e.touches[0];
+    if (touch) touchStartY.current = touch.clientY;
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+    const touch = e.changedTouches[0];
+    if (!touch) return;
+    const deltaY = touch.clientY - touchStartY.current;
     if (Math.abs(deltaY) > 50) {
       if (deltaY < 0) onNext();
       else onPrev();
