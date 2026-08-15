@@ -1,4 +1,4 @@
-import { loginSchema, signupSchema, type User, type UserRole } from "./auth-schema";
+import { loginSchema, signupSchema, type User, type UserRole, type TransportCompany } from "./auth-schema";
 
 const USERS_KEY = "dt_users";
 const SESSION_KEY = "dt_auth_token";
@@ -35,12 +35,12 @@ export async function signup(input: unknown): Promise<{ user: User; token: strin
     name: data.name,
     phone: data.phone,
     role: data.role,
-    businessName: data.businessName,
-    shopLocation: data.shopLocation,
-    transportCompany: data.transportCompany,
-    vehicleType: data.vehicleType,
-    licenseNumber: data.licenseNumber,
-    defaultAddress: data.defaultAddress,
+    ...(data.businessName ? { businessName: data.businessName } : {}),
+    ...(data.shopLocation ? { shopLocation: data.shopLocation } : {}),
+    ...(data.transportCompany ? { transportCompany: data.transportCompany } : {}),
+    ...(data.vehicleType ? { vehicleType: data.vehicleType } : {}),
+    ...(data.licenseNumber ? { licenseNumber: data.licenseNumber } : {}),
+    ...(data.defaultAddress ? { defaultAddress: data.defaultAddress } : {}),
   };
   users.push({ ...user, password: data.password });
   saveUsers(users);
@@ -83,11 +83,24 @@ export async function logout(): Promise<void> {
   localStorage.removeItem(SESSION_KEY);
 }
 
+export function getDashboardPath(role: UserRole): string {
+  switch (role) {
+    case "vendor":
+      return "/vendor/dashboard";
+    case "transport":
+      return "/transport/dashboard";
+    case "customer":
+      return "/customer/dashboard";
+    default:
+      return "/";
+  }
+}
+
 export async function syncToCloud(): Promise<void> {
   if (typeof window === "undefined") return;
   
-  const cloudUrl = import.meta.env.VITE_DATABASE_URL;
-  const apiKey = import.meta.env.VITE_DATABASE_API_KEY;
+  const cloudUrl = import.meta.env["VITE_DATABASE_URL"];
+  const apiKey = import.meta.env["VITE_DATABASE_API_KEY"];
   
   if (!cloudUrl || !apiKey) {
     console.log("Cloud sync skipped: no DATABASE_URL or API_KEY configured");
@@ -119,8 +132,8 @@ export async function syncToCloud(): Promise<void> {
 export async function loadFromCloud(): Promise<void> {
   if (typeof window === "undefined") return;
   
-  const cloudUrl = import.meta.env.VITE_DATABASE_URL;
-  const apiKey = import.meta.env.VITE_DATABASE_API_KEY;
+  const cloudUrl = import.meta.env["VITE_DATABASE_URL"];
+  const apiKey = import.meta.env["VITE_DATABASE_API_KEY"];
   
   if (!cloudUrl || !apiKey) {
     console.log("Cloud load skipped: no DATABASE_URL or API_KEY configured");

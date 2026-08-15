@@ -12,21 +12,22 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as MarketRouteImport } from './routes/market'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as VideosRouteImport } from './routes/videos'
-import { Route as ProductProductIdRouteImport } from './routes/product.$productId'
-import { Route as ShopShopIdRouteImport } from './routes/shop.$shopId'
 import { Route as AuthSigninRouteImport } from './routes/auth/signin'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
-import { Route as VendorDashboardRouteImport } from './routes/vendor/dashboard'
+import { Route as CheckoutProductIdRouteImport } from './routes/checkout.$productId'
+import { Route as CustomerDashboardRouteImport } from './routes/customer/dashboard'
+import { Route as ProductProductIdRouteImport } from './routes/product.$productId'
+import { Route as ShopShopIdRouteImport } from './routes/shop.$shopId'
+import { Route as TransportDashboardRouteImport } from './routes/transport/dashboard'
 import { Route as VendorAddProductRouteImport } from './routes/vendor/add-product'
+import { Route as VendorDashboardRouteImport } from './routes/vendor/dashboard'
+import { Route as VendorMessagesRouteImport } from './routes/vendor/messages'
 import { Route as VendorRevenueRouteImport } from './routes/vendor/revenue'
 import { Route as VendorVideosRouteImport } from './routes/vendor/videos'
-import { Route as VendorMessagesRouteImport } from './routes/vendor/messages'
-import { Route as TransportDashboardRouteImport } from './routes/transport/dashboard'
-import { Route as CustomerDashboardRouteImport } from './routes/customer/dashboard'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as VideosUploadRouteImport } from './routes/videos/upload'
 import { Route as VideosVideoIdRouteImport } from './routes/videos/$videoId'
+import { Route as VideosUploadRouteImport } from './routes/videos/upload'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,6 +42,11 @@ const AssistantRoute = AssistantRouteImport.update({
 const MarketRoute = MarketRouteImport.update({
   id: '/market',
   path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VideosRoute = VideosRouteImport.update({
@@ -58,14 +64,14 @@ const AuthSignupRoute = AuthSignupRouteImport.update({
   path: '/auth/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutProductIdRoute = CheckoutProductIdRouteImport.update({
+  id: '/checkout/$productId',
+  path: '/checkout/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CustomerDashboardRoute = CustomerDashboardRouteImport.update({
   id: '/customer/dashboard',
   path: '/customer/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductProductIdRoute = ProductProductIdRouteImport.update({
@@ -123,12 +129,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
   '/market': typeof MarketRoute
+  '/profile': typeof ProfileRoute
   '/videos': typeof VideosRouteWithChildren
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/checkout/$productId': typeof CheckoutProductIdRoute
   '/customer/dashboard': typeof CustomerDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
-  '/profile': typeof ProfileRoute
   '/shop/$shopId': typeof ShopShopIdRoute
   '/transport/dashboard': typeof TransportDashboardRoute
   '/vendor/add-product': typeof VendorAddProductRoute
@@ -143,12 +150,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
   '/market': typeof MarketRoute
+  '/profile': typeof ProfileRoute
   '/videos': typeof VideosRouteWithChildren
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/checkout/$productId': typeof CheckoutProductIdRoute
   '/customer/dashboard': typeof CustomerDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
-  '/profile': typeof ProfileRoute
   '/shop/$shopId': typeof ShopShopIdRoute
   '/transport/dashboard': typeof TransportDashboardRoute
   '/vendor/add-product': typeof VendorAddProductRoute
@@ -164,12 +172,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
   '/market': typeof MarketRoute
+  '/profile': typeof ProfileRoute
   '/videos': typeof VideosRouteWithChildren
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/checkout/$productId': typeof CheckoutProductIdRoute
   '/customer/dashboard': typeof CustomerDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
-  '/profile': typeof ProfileRoute
   '/shop/$shopId': typeof ShopShopIdRoute
   '/transport/dashboard': typeof TransportDashboardRoute
   '/vendor/add-product': typeof VendorAddProductRoute
@@ -186,12 +195,13 @@ export interface FileRouteTypes {
     | '/'
     | '/assistant'
     | '/market'
+    | '/profile'
     | '/videos'
     | '/auth/signin'
     | '/auth/signup'
+    | '/checkout/$productId'
     | '/customer/dashboard'
     | '/product/$productId'
-    | '/profile'
     | '/shop/$shopId'
     | '/transport/dashboard'
     | '/vendor/add-product'
@@ -206,12 +216,13 @@ export interface FileRouteTypes {
     | '/'
     | '/assistant'
     | '/market'
+    | '/profile'
     | '/videos'
     | '/auth/signin'
     | '/auth/signup'
+    | '/checkout/$productId'
     | '/customer/dashboard'
     | '/product/$productId'
-    | '/profile'
     | '/shop/$shopId'
     | '/transport/dashboard'
     | '/vendor/add-product'
@@ -226,12 +237,13 @@ export interface FileRouteTypes {
     | '/'
     | '/assistant'
     | '/market'
+    | '/profile'
     | '/videos'
     | '/auth/signin'
     | '/auth/signup'
+    | '/checkout/$productId'
     | '/customer/dashboard'
     | '/product/$productId'
-    | '/profile'
     | '/shop/$shopId'
     | '/transport/dashboard'
     | '/vendor/add-product'
@@ -247,12 +259,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssistantRoute: typeof AssistantRoute
   MarketRoute: typeof MarketRoute
+  ProfileRoute: typeof ProfileRoute
   VideosRoute: typeof VideosRouteWithChildren
   AuthSigninRoute: typeof AuthSigninRoute
   AuthSignupRoute: typeof AuthSignupRoute
+  CheckoutProductIdRoute: typeof CheckoutProductIdRoute
   CustomerDashboardRoute: typeof CustomerDashboardRoute
   ProductProductIdRoute: typeof ProductProductIdRoute
-  ProfileRoute: typeof ProfileRoute
   ShopShopIdRoute: typeof ShopShopIdRoute
   TransportDashboardRoute: typeof TransportDashboardRoute
   VendorAddProductRoute: typeof VendorAddProductRoute
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/videos': {
       id: '/videos'
       path: '/videos'
@@ -306,6 +326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout/$productId': {
+      id: '/checkout/$productId'
+      path: '/checkout/$productId'
+      fullPath: '/checkout/$productId'
+      preLoaderRoute: typeof CheckoutProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/customer/dashboard': {
       id: '/customer/dashboard'
       path: '/customer/dashboard'
@@ -318,13 +345,6 @@ declare module '@tanstack/react-router' {
       path: '/product/$productId'
       fullPath: '/product/$productId'
       preLoaderRoute: typeof ProductProductIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop/$shopId': {
@@ -410,12 +430,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssistantRoute: AssistantRoute,
   MarketRoute: MarketRoute,
+  ProfileRoute: ProfileRoute,
   VideosRoute: VideosRouteWithChildren,
   AuthSigninRoute: AuthSigninRoute,
   AuthSignupRoute: AuthSignupRoute,
+  CheckoutProductIdRoute: CheckoutProductIdRoute,
   CustomerDashboardRoute: CustomerDashboardRoute,
   ProductProductIdRoute: ProductProductIdRoute,
-  ProfileRoute: ProfileRoute,
   ShopShopIdRoute: ShopShopIdRoute,
   TransportDashboardRoute: TransportDashboardRoute,
   VendorAddProductRoute: VendorAddProductRoute,

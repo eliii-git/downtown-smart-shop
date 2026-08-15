@@ -72,13 +72,14 @@ function ProductPage() {
                 {product.stock} in stock
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
-                <button
-                  type="button"
+                <Link
+                  to="/checkout/$productId"
+                  params={{ productId: product.id }}
                   className="inline-flex flex-1 items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.01]"
                   style={{ backgroundImage: "var(--gradient-gold)" }}
                 >
                   Buy now
-                </button>
+                </Link>
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-xl border border-border px-5 py-3 text-sm font-semibold transition-colors hover:bg-secondary"

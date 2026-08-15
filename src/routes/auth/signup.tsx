@@ -13,6 +13,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { signup, getDashboardPath } from "@/lib/auth";
 import { type UserRole } from "@/lib/auth-schema";
 
@@ -34,6 +41,7 @@ function SignUp() {
   const [role, setRole] = useState<UserRole | "">("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [transportCompany, setTransportCompany] = useState<string>("");
 
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -42,6 +50,7 @@ function SignUp() {
   const confirmRef = useRef<HTMLInputElement>(null);
   const businessRef = useRef<HTMLInputElement>(null);
   const shopRef = useRef<HTMLInputElement>(null);
+  const vehicleRef = useRef<HTMLInputElement>(null);
   const licenseRef = useRef<HTMLInputElement>(null);
   const addressRef = useRef<HTMLInputElement>(null);
 
@@ -57,9 +66,11 @@ function SignUp() {
       if (draft.confirmPassword && confirmRef.current) confirmRef.current.value = draft.confirmPassword;
       if (draft.businessName && businessRef.current) businessRef.current.value = draft.businessName;
       if (draft.shopLocation && shopRef.current) shopRef.current.value = draft.shopLocation;
+      if (draft.vehicleType && vehicleRef.current) vehicleRef.current.value = draft.vehicleType;
       if (draft.licenseNumber && licenseRef.current) licenseRef.current.value = draft.licenseNumber;
       if (draft.defaultAddress && addressRef.current) addressRef.current.value = draft.defaultAddress;
       if (draft.role) setRole(draft.role);
+      if (draft.transportCompany) setTransportCompany(draft.transportCompany);
     } catch {}
   }, []);
 
@@ -75,9 +86,11 @@ function SignUp() {
           confirmPassword: confirmRef.current?.value,
           businessName: businessRef.current?.value,
           shopLocation: shopRef.current?.value,
+          vehicleType: vehicleRef.current?.value,
           licenseNumber: licenseRef.current?.value,
           defaultAddress: addressRef.current?.value,
           role,
+          transportCompany,
         })
       );
     } catch {}
@@ -95,6 +108,7 @@ function SignUp() {
       const confirmValue = confirmRef.current?.value ?? "";
       const businessValue = businessRef.current?.value?.trim() ?? "";
       const shopValue = shopRef.current?.value?.trim() ?? "";
+      const vehicleValue = vehicleRef.current?.value?.trim() ?? "";
       const licenseValue = licenseRef.current?.value?.trim() ?? "";
       const addressValue = addressRef.current?.value?.trim() ?? "";
 
@@ -117,6 +131,8 @@ function SignUp() {
           role: role as UserRole,
           businessName: businessValue || undefined,
           shopLocation: shopValue || undefined,
+          transportCompany: transportCompany || undefined,
+          vehicleType: vehicleValue || undefined,
           licenseNumber: licenseValue || undefined,
           defaultAddress: addressValue || undefined,
         });
@@ -130,7 +146,7 @@ function SignUp() {
         setLoading(false);
       }
     },
-    [role]
+    [role, transportCompany]
   );
 
   return (
@@ -251,6 +267,22 @@ function SignUp() {
             {role === "transport" && (
               <div className="space-y-3 rounded-lg border border-border bg-secondary/20 p-4">
                 <h4 className="text-sm font-semibold">Transport Details</h4>
+                <div className="space-y-2">
+                  <Label htmlFor="transport-company">Transport Company</Label>
+                  <Select value={transportCompany} onValueChange={(v) => { setTransportCompany(v); persist(); }}>
+                    <SelectTrigger id="transport-company">
+                      <SelectValue placeholder="Select company" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Farasi">Farasi</SelectItem>
+                      <SelectItem value="SafeBoda">SafeBoda</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="transport-vehicle">Vehicle Type (e.g., Motorcycle, Boda, Van)</Label>
+                  <Input ref={vehicleRef} id="transport-vehicle" required onChange={persist} />
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="transport-license">License / Registration Number</Label>
                   <Input ref={licenseRef} id="transport-license" required onChange={persist} />

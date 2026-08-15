@@ -3,6 +3,9 @@ import { z } from "zod";
 export const userRoles = ["vendor", "transport", "customer"] as const;
 export type UserRole = (typeof userRoles)[number];
 
+export const transportCompanies = ["Farasi", "SafeBoda"] as const;
+export type TransportCompany = (typeof transportCompanies)[number];
+
 export const signupSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -11,7 +14,7 @@ export const signupSchema = z.object({
   role: z.enum(userRoles),
   businessName: z.string().optional(),
   shopLocation: z.string().optional(),
-  transportCompany: z.string().optional(),
+  transportCompany: z.enum(transportCompanies).optional(),
   vehicleType: z.string().optional(),
   licenseNumber: z.string().optional(),
   defaultAddress: z.string().optional(),
@@ -41,7 +44,7 @@ export interface User {
   role: UserRole;
   businessName?: string;
   shopLocation?: string;
-  transportCompany?: string;
+  transportCompany?: TransportCompany;
   vehicleType?: string;
   licenseNumber?: string;
   defaultAddress?: string;
