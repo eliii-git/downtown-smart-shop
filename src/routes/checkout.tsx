@@ -372,7 +372,7 @@ function CheckoutPage() {
                     Payment Method
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-4">
                   <RadioGroup
                     value={paymentMethod}
                     onValueChange={(v) => setPaymentMethod(v as PaymentMethod)}
@@ -402,6 +402,78 @@ function CheckoutPage() {
                       ))}
                     </div>
                   </RadioGroup>
+
+                  {paymentMethod === "mtn" || paymentMethod === "airtel" ? (
+                    <div className="mt-4 space-y-2 rounded-lg border border-border bg-secondary/20 p-4">
+                      <h4 className="text-sm font-semibold">
+                        {paymentMethod === "mtn" ? "MTN" : "Airtel"} Mobile Money Details
+                      </h4>
+                      <div className="space-y-2">
+                        <Label htmlFor="payment-phone">Phone Number</Label>
+                        <Input
+                          id="payment-phone"
+                          type="tel"
+                          placeholder="+256 700 000000"
+                          inputMode="numeric"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="payment-name">Account Name</Label>
+                        <Input id="payment-name" placeholder="Name registered on mobile money" />
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {paymentMethod === "card" ? (
+                    <div className="mt-4 space-y-2 rounded-lg border border-border bg-secondary/20 p-4">
+                      <h4 className="text-sm font-semibold">Card Details</h4>
+                      <div className="space-y-2">
+                        <Label htmlFor="card-number">Card Number</Label>
+                        <Input
+                          id="card-number"
+                          type="text"
+                          placeholder="1234 5678 9012 3456"
+                          inputMode="numeric"
+                          maxLength={19}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
+                          <Label htmlFor="card-expiry">Expiry Date</Label>
+                          <Input
+                            id="card-expiry"
+                            type="text"
+                            placeholder="MM/YY"
+                            maxLength={5}
+                            inputMode="numeric"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="card-cvv">CVV</Label>
+                          <Input
+                            id="card-cvv"
+                            type="text"
+                            placeholder="123"
+                            maxLength={4}
+                            inputMode="numeric"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="card-name">Cardholder Name</Label>
+                        <Input id="card-name" placeholder="Name on card" />
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {paymentMethod === "cod" ? (
+                    <div className="mt-4 rounded-lg border border-border bg-secondary/20 p-4">
+                      <p className="text-xs text-muted-foreground">
+                        Pay with cash when your order arrives. Please have the exact amount ready.
+                        Our rider will collect payment upon delivery.
+                      </p>
+                    </div>
+                  ) : null}
                 </CardContent>
               </Card>
             )}
