@@ -1,11 +1,14 @@
 "use client";
-import { useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { ShoppingBag, Heart, MapPin, Clock, Star } from "lucide-react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { ShoppingBag, Heart, MapPin, Clock, Star, Truck } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { getOrders, type Order } from "@/lib/cart";
 
 export const Route = createFileRoute("/customer/dashboard")({
   component: CustomerDashboard,
@@ -13,13 +16,18 @@ export const Route = createFileRoute("/customer/dashboard")({
 
 function CustomerDashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
-  const navigate = useNavigate();
+  const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || user?.role !== "customer")) {
-      navigate({ to: "/auth/signin", replace: true });
+      throw redirect({ to: "/auth/signin" });
     }
-  }, [isAuthenticated, isLoading, user?.role, navigate]);
+  }, [isAuthenticated, isLoading, user?.role]);
+
+  useEffect(() => {
+    const all = getOrders();
+    setOrders(all.filter((o) => o.userId === user?.id));
+  }, [user?.id]);
 
   if (isLoading) {
     return (
@@ -39,17 +47,31 @@ function CustomerDashboard() {
   }
 
   const stats = [
-    { label: "Orders", value: "5", icon: ShoppingBag, href: "/market" },
-    { label: "Wishlist", value: "12", icon: Heart, href: "/market" },
-    { label: "Deliveries", value: "3", icon: MapPin, href: "/market" },
-    { label: "Reviews", value: "8", icon: Star, href: "/market" },
+    { label: "Orders", value: String(orders.length), icon: ShoppingBag, href: "/market" },
+    { label: "Wishlist", value: "0", icon: Heart, href: "/market" },
+    {
+      label: "Deliveries",
+      value: String(orders.filter((o) => o.status === "in_transit").length),
+      icon: MapPin,
+      href: "/market",
+    },
+    { label: "Reviews", value: "0", icon: Star, href: "/market" },
   ];
 
-  const orders = [
-    { id: "ORD-501", shop: "Kikubo Electronics", amount: "UGX 120,000", status: "Delivered", date: "2 days ago" },
-    { id: "ORD-502", shop: "Fabric World", amount: "UGX 45,000", status: "In Transit", date: "Today" },
-    { id: "ORD-503", shop: "Kitchen Hub", amount: "UGX 89,000", status: "Processing", date: "Today" },
-  ];
+  const getStatusVariant = (status: string) => {
+    switch (status) {
+      case "delivered":
+        return "default";
+      case "in_transit":
+        return "secondary";
+      case "assigned":
+        return "outline";
+      case "pending":
+        return "outline";
+      default:
+        return "outline";
+    }
+  };
 
   return (
     <Shell>
@@ -80,19 +102,36 @@ function CustomerDashboard() {
           <div className="surface-card p-6">
             <h2 className="text-lg font-semibold">Recent Orders</h2>
             <div className="mt-4 space-y-3">
-              {orders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between rounded-lg border border-border p-4">
-                  <div>
-                    <p className="text-sm font-medium">{order.id}</p>
-                    <p className="text-xs text-muted-foreground">{order.shop}</p>
-                    <p className="text-xs text-muted-foreground">{order.date}</p>
+              {orders.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No orders yet.</p>
+              ) : (
+                orders.slice(0, 5).map((order) => (
+                  <div
+                    key={order.id}
+                    className="flex items-center justify-between rounded-lg border border-border p-4"
+                  >
+                    <div>
+                      <p className="text-sm font-medium">{order.id}</p>
+                      <p className="text-xs text-muted-foreground">{order.shopName}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium">{`UGX ${order.grandTotal.toLocaleString()}`}</p>
+                      <Badge variant={getStatusVariant(order.status)}>
+                        {order.status.replace("_", " ")}
+                      </Badge>
+                      {order.transporterName && (
+                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                          <Truck className="h-3 w-3" />
+                          {order.transporterName}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium">{order.amount}</p>
-                    <p className="text-xs text-muted-foreground">{order.status}</p>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
 
@@ -105,10 +144,12 @@ function CustomerDashboard() {
                   Browse Products
                 </Button>
               </Link>
-              <Button className="w-full justify-start" variant="outline">
-                <MapPin className="mr-2 h-4 w-4" />
-                Track Delivery
-              </Button>
+              <Link to="/cart">
+                <Button className="w-full justify-start" variant="outline">
+                  <MapPin className="mr-2 h-4 w-4" />
+                  View Cart
+                </Button>
+              </Link>
               <Button className="w-full justify-start" variant="outline">
                 <Heart className="mr-2 h-4 w-4" />
                 View Wishlist

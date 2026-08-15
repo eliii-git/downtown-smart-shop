@@ -1,10 +1,23 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Star, Truck } from "lucide-react";
+import { Heart, Star, Truck, ShoppingCart } from "lucide-react";
 import { getShop, ugx, type Product } from "@/data/marketplace";
 import { TrustScore } from "./TrustScore";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { addToCart } from "@/lib/cart";
 
 export function ProductCard({ product }: { product: Product }) {
   const shop = getShop(product.shopId);
+  const { isAuthenticated } = useAuth();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      window.location.href = "/auth/signin";
+      return;
+    }
+    addToCart({ productId: product.id, quantity: 1, shopId: product.shopId });
+  };
 
   return (
     <Link
@@ -38,7 +51,9 @@ export function ProductCard({ product }: { product: Product }) {
 
       <div className="space-y-3 p-4">
         <div className="flex min-w-0 items-start justify-between gap-2">
-          <h3 className="line-clamp-2 min-w-0 text-sm font-semibold leading-snug">{product.name}</h3>
+          <h3 className="line-clamp-2 min-w-0 text-sm font-semibold leading-snug">
+            {product.name}
+          </h3>
           <span className="shrink-0 rounded-md bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-foreground">
             {product.aiScore}
           </span>
@@ -61,6 +76,15 @@ export function ProductCard({ product }: { product: Product }) {
             {product.deliveryDays}d
           </span>
         </div>
+
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-border py-2 text-xs font-semibold transition-colors hover:bg-primary hover:text-primary-foreground"
+        >
+          <ShoppingCart className="h-3.5 w-3.5" />
+          Add to Cart
+        </button>
 
         <div className="flex min-w-0 items-center justify-between gap-2 border-t border-border pt-3">
           <span className="truncate text-xs text-muted-foreground">{shop?.name}</span>

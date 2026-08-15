@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as VideosRouteImport } from './routes/videos'
@@ -36,6 +38,16 @@ const IndexRoute = IndexRouteImport.update({
 const AssistantRoute = AssistantRouteImport.update({
   id: '/assistant',
   path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketRoute = MarketRouteImport.update({
@@ -122,6 +134,8 @@ const VideosUploadRoute = VideosUploadRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/market': typeof MarketRoute
   '/profile': typeof ProfileRoute
   '/videos': typeof VideosRouteWithChildren
@@ -142,6 +156,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/market': typeof MarketRoute
   '/profile': typeof ProfileRoute
   '/videos': typeof VideosRouteWithChildren
@@ -163,6 +179,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/market': typeof MarketRoute
   '/profile': typeof ProfileRoute
   '/videos': typeof VideosRouteWithChildren
@@ -185,6 +203,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/assistant'
+    | '/cart'
+    | '/checkout'
     | '/market'
     | '/profile'
     | '/videos'
@@ -205,6 +225,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/assistant'
+    | '/cart'
+    | '/checkout'
     | '/market'
     | '/profile'
     | '/videos'
@@ -225,6 +247,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/assistant'
+    | '/cart'
+    | '/checkout'
     | '/market'
     | '/profile'
     | '/videos'
@@ -246,6 +270,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssistantRoute: typeof AssistantRoute
+  CartRoute: typeof CartRoute
+  CheckoutRoute: typeof CheckoutRoute
   MarketRoute: typeof MarketRoute
   ProfileRoute: typeof ProfileRoute
   VideosRoute: typeof VideosRouteWithChildren
@@ -276,6 +302,20 @@ declare module '@tanstack/react-router' {
       path: '/assistant'
       fullPath: '/assistant'
       preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/market': {
@@ -409,6 +449,8 @@ const VideosRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssistantRoute: AssistantRoute,
+  CartRoute: CartRoute,
+  CheckoutRoute: CheckoutRoute,
   MarketRoute: MarketRoute,
   ProfileRoute: ProfileRoute,
   VideosRoute: VideosRouteWithChildren,

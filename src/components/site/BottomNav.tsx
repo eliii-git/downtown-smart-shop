@@ -1,5 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Home, LayoutDashboard, MessageSquare, Play, Sparkles, Store, User } from "lucide-react";
+import {
+  Home,
+  LayoutDashboard,
+  MessageSquare,
+  Play,
+  Sparkles,
+  Store,
+  User,
+  ShoppingCart,
+} from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 const publicItems = [
@@ -12,6 +21,7 @@ const publicItems = [
 const customerItems = [
   { to: "/", label: "Home", Icon: Home },
   { to: "/market", label: "Market", Icon: Store },
+  { to: "/cart", label: "Cart", Icon: ShoppingCart },
   { to: "/assistant", label: "Ask AI", Icon: Sparkles },
   { to: "/videos", label: "Videos", Icon: Play },
 ] as const;
@@ -33,14 +43,13 @@ const transportItems = [
 export function BottomNav() {
   const { user, isAuthenticated } = useAuth();
 
-  const items =
-    !isAuthenticated
-      ? publicItems
-      : user?.role === "vendor"
-        ? vendorItems
-        : user?.role === "transport"
-          ? transportItems
-          : customerItems;
+  const items = !isAuthenticated
+    ? publicItems
+    : user?.role === "vendor"
+      ? vendorItems
+      : user?.role === "transport"
+        ? transportItems
+        : customerItems;
 
   return (
     <nav className="glass fixed inset-x-0 bottom-0 z-50 border-t border-border/70 pb-[env(safe-area-inset-bottom)]">

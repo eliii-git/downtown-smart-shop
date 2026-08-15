@@ -1,8 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { Heart, Share2, ShieldCheck, Star, Truck } from "lucide-react";
+import { Heart, Share2, ShieldCheck, Star, Truck, ShoppingCart } from "lucide-react";
 import { Shell } from "@/components/site/Shell";
 import { TrustScore } from "@/components/site/TrustScore";
 import { getProduct, getShop, products, ugx, type Product } from "@/data/marketplace";
+import { addToCart, getCart } from "@/lib/cart";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export const Route = createFileRoute("/product/$productId")({
   loader: ({ params }) => {
@@ -29,6 +31,16 @@ function ProductPage() {
   const { product } = Route.useLoaderData() as { product: Product };
   const shop = getShop(product.shopId);
   const related = products.filter((p) => p.id !== product.id && p.category === product.category);
+  const { isAuthenticated } = useAuth();
+
+  const handleBuyNow = () => {
+    if (!isAuthenticated) {
+      window.location.href = "/auth/signin";
+      return;
+    }
+    addToCart({ productId: product.id, quantity: 1, shopId: product.shopId });
+    window.location.href = "/cart";
+  };
 
   return (
     <Shell>
@@ -68,15 +80,17 @@ function ProductPage() {
             <div className="surface-card mt-6 p-5">
               <p className="font-display text-3xl font-bold">{ugx(product.retail)}</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Bulk price {ugx(product.wholesale)} from {product.bulkFrom} units ·{" "}
-                {product.stock} in stock
+                Bulk price {ugx(product.wholesale)} from {product.bulkFrom} units · {product.stock}{" "}
+                in stock
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
                 <button
                   type="button"
+                  onClick={handleBuyNow}
                   className="inline-flex flex-1 items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.01]"
                   style={{ backgroundImage: "var(--gradient-gold)" }}
                 >
+                  <ShoppingCart className="mr-2 h-4 w-4" />
                   Buy now
                 </button>
                 <button
