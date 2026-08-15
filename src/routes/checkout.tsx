@@ -252,7 +252,7 @@ function CheckoutPage() {
                   className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium ${
                     step === s.key
                       ? "bg-primary text-primary-foreground"
-                      : steps.indexOf(step as (typeof steps)[number]) > i
+                      : steps.findIndex((st) => st.key === step) > i
                         ? "bg-green-500/10 text-green-700"
                         : "bg-muted text-muted-foreground"
                   }`}
@@ -478,9 +478,10 @@ function CheckoutPage() {
               </Button>
               {step !== "review" ? (
                 <Button
-                  onClick={() =>
-                    setStep(steps[steps.indexOf(step as (typeof steps)[number]) + 1].key)
-                  }
+                  onClick={() => {
+                    const idx = steps.findIndex((s) => s.key === step);
+                    if (idx < steps.length - 1) setStep(steps[idx + 1].key);
+                  }}
                   disabled={!canProceed()}
                 >
                   Continue
