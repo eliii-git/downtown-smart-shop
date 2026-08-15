@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
@@ -20,15 +20,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export const Route = createFileRoute("/vendor/dashboard")({
   component: VendorDashboard,
@@ -45,11 +37,41 @@ const weeklyChartData = [
 ];
 
 const recentOrders = [
-  { id: "ORD-001", customer: "John D.", amount: "UGX 45,000", status: "Pending", date: "2 min ago" },
-  { id: "ORD-002", customer: "Sarah M.", amount: "UGX 120,000", status: "Processing", date: "15 min ago" },
-  { id: "ORD-003", customer: "Mike K.", amount: "UGX 85,000", status: "Delivered", date: "1 hour ago" },
-  { id: "ORD-004", customer: "Grace N.", amount: "UGX 210,000", status: "Delivered", date: "3 hours ago" },
-  { id: "ORD-005", customer: "David O.", amount: "UGX 32,000", status: "Pending", date: "5 hours ago" },
+  {
+    id: "ORD-001",
+    customer: "John D.",
+    amount: "UGX 45,000",
+    status: "Pending",
+    date: "2 min ago",
+  },
+  {
+    id: "ORD-002",
+    customer: "Sarah M.",
+    amount: "UGX 120,000",
+    status: "Processing",
+    date: "15 min ago",
+  },
+  {
+    id: "ORD-003",
+    customer: "Mike K.",
+    amount: "UGX 85,000",
+    status: "Delivered",
+    date: "1 hour ago",
+  },
+  {
+    id: "ORD-004",
+    customer: "Grace N.",
+    amount: "UGX 210,000",
+    status: "Delivered",
+    date: "3 hours ago",
+  },
+  {
+    id: "ORD-005",
+    customer: "David O.",
+    amount: "UGX 32,000",
+    status: "Pending",
+    date: "5 hours ago",
+  },
 ];
 
 function VendorDashboard() {
@@ -89,7 +111,12 @@ function VendorDashboard() {
     { to: "/vendor/add-product", label: "Add Product", icon: Plus, description: "List a new item" },
     { to: "/vendor/revenue", label: "Revenue", icon: TrendingUp, description: "View analytics" },
     { to: "/vendor/videos", label: "Videos", icon: Video, description: "Manage promos" },
-    { to: "/vendor/messages", label: "Messages", icon: MessageSquare, description: "Customer chat" },
+    {
+      to: "/vendor/messages",
+      label: "Messages",
+      icon: MessageSquare,
+      description: "Customer chat",
+    },
   ];
 
   const getStatusVariant = (status: string) => {
@@ -105,7 +132,7 @@ function VendorDashboard() {
     }
   };
 
-  const totalSales = useMemo(() => weeklyChartData.reduce((acc, curr) => acc + curr.sales, 0), []);
+  const totalSales = weeklyChartData.reduce((acc, curr) => acc + curr.sales, 0);
 
   return (
     <Shell>
@@ -119,7 +146,9 @@ function VendorDashboard() {
               <div>
                 <h1 className="text-2xl font-bold tracking-tight">Vendor Dashboard</h1>
                 <p className="text-sm text-muted-foreground">
-                  {user.businessName ? `${user.businessName} · ${user.shopLocation}` : `Welcome back, ${user.name}`}
+                  {user.businessName
+                    ? `${user.businessName} · ${user.shopLocation}`
+                    : `Welcome back, ${user.name}`}
                 </p>
               </div>
             </div>
@@ -163,7 +192,9 @@ function VendorDashboard() {
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold">Weekly Performance</h2>
-                <p className="text-sm text-muted-foreground">Total sales this week: {totalSales} units</p>
+                <p className="text-sm text-muted-foreground">
+                  Total sales this week: {totalSales} units
+                </p>
               </div>
               <Badge variant="secondary" className="gap-1">
                 <TrendingUp className="h-3 w-3" />
@@ -172,9 +203,16 @@ function VendorDashboard() {
             </div>
             <div className="h-[280px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={weeklyChartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+                <BarChart
+                  data={weeklyChartData}
+                  margin={{ top: 5, right: 10, left: -10, bottom: 0 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
-                  <XAxis dataKey="day" className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+                  <XAxis
+                    dataKey="day"
+                    className="text-xs"
+                    tick={{ fill: "hsl(var(--muted-foreground))" }}
+                  />
                   <YAxis className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
                   <Tooltip
                     contentStyle={{
@@ -184,7 +222,12 @@ function VendorDashboard() {
                     }}
                     labelStyle={{ color: "hsl(var(--foreground))" }}
                   />
-                  <Bar dataKey="sales" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} barSize={32} />
+                  <Bar
+                    dataKey="sales"
+                    fill="hsl(var(--primary))"
+                    radius={[6, 6, 0, 0]}
+                    barSize={32}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -228,8 +271,12 @@ function VendorDashboard() {
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
                 <tr>
-                  <th className="px-6 py-3 text-left font-medium text-muted-foreground">Order ID</th>
-                  <th className="px-6 py-3 text-left font-medium text-muted-foreground">Customer</th>
+                  <th className="px-6 py-3 text-left font-medium text-muted-foreground">
+                    Order ID
+                  </th>
+                  <th className="px-6 py-3 text-left font-medium text-muted-foreground">
+                    Customer
+                  </th>
                   <th className="px-6 py-3 text-left font-medium text-muted-foreground">Amount</th>
                   <th className="px-6 py-3 text-left font-medium text-muted-foreground">Status</th>
                   <th className="px-6 py-3 text-left font-medium text-muted-foreground">Time</th>

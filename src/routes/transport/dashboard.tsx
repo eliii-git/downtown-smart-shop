@@ -58,7 +58,7 @@ function TransportDashboard() {
           <p className="mt-1 text-muted-foreground">Welcome back, {user.name}</p>
           {user.transportCompany && (
             <p className="mt-1 text-sm text-muted-foreground">
-              {user.transportCompany} · {user.vehicleType} · {user.licenseNumber}
+              {user.transportCompany} · {user.licenseNumber}
             </p>
           )}
         </div>
@@ -82,7 +82,10 @@ function TransportDashboard() {
             <h2 className="text-lg font-semibold">Available Deliveries</h2>
             <div className="mt-4 space-y-3">
               {deliveries.map((delivery) => (
-                <div key={delivery.id} className="flex items-center justify-between rounded-lg border border-border p-4">
+                <div
+                  key={delivery.id}
+                  className="flex items-center justify-between rounded-lg border border-border p-4"
+                >
                   <div className="flex items-center gap-3">
                     <div className="grid h-10 w-10 place-items-center rounded-full bg-primary/10">
                       <MapPin className="h-5 w-5 text-primary" />

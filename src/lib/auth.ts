@@ -51,7 +51,6 @@ export async function signup(input: unknown): Promise<{ user: User; token: strin
     ...(data.businessName !== undefined ? { businessName: data.businessName } : {}),
     ...(data.shopLocation !== undefined ? { shopLocation: data.shopLocation } : {}),
     ...(data.transportCompany !== undefined ? { transportCompany: data.transportCompany } : {}),
-    ...(data.vehicleType !== undefined ? { vehicleType: data.vehicleType } : {}),
     ...(data.licenseNumber !== undefined ? { licenseNumber: data.licenseNumber } : {}),
     ...(data.defaultAddress !== undefined ? { defaultAddress: data.defaultAddress } : {}),
   };
@@ -65,9 +64,7 @@ export async function signup(input: unknown): Promise<{ user: User; token: strin
 export async function login(input: unknown): Promise<{ user: User; token: string }> {
   const data = loginSchema.parse(input);
   const users = getUsers();
-  const userEntry = users.find(
-    (u) => u.email === data.email && u.password === data.password
-  );
+  const userEntry = users.find((u) => u.email === data.email && u.password === data.password);
   if (!userEntry) throw new Error("Invalid email or password");
 
   const { password, ...user } = userEntry;
@@ -98,9 +95,9 @@ export async function logout(): Promise<void> {
 
 export async function syncToCloud(): Promise<void> {
   if (typeof window === "undefined") return;
-  
-  const cloudUrl = import.meta.env['VITE_DATABASE_URL'];
-  const apiKey = import.meta.env['VITE_DATABASE_API_KEY'];
+
+  const cloudUrl = import.meta.env["VITE_DATABASE_URL"];
+  const apiKey = import.meta.env["VITE_DATABASE_API_KEY"];
 
   if (!cloudUrl || !apiKey) {
     console.log("Cloud sync skipped: no DATABASE_URL or API_KEY configured");
@@ -110,12 +107,12 @@ export async function syncToCloud(): Promise<void> {
   try {
     const users = getUsers();
     const sessionToken = localStorage.getItem(SESSION_KEY);
-    
+
     await fetch(cloudUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         action: "sync",
@@ -131,9 +128,9 @@ export async function syncToCloud(): Promise<void> {
 
 export async function loadFromCloud(): Promise<void> {
   if (typeof window === "undefined") return;
-  
-  const cloudUrl = import.meta.env['VITE_DATABASE_URL'];
-  const apiKey = import.meta.env['VITE_DATABASE_API_KEY'];
+
+  const cloudUrl = import.meta.env["VITE_DATABASE_URL"];
+  const apiKey = import.meta.env["VITE_DATABASE_API_KEY"];
 
   if (!cloudUrl || !apiKey) {
     console.log("Cloud load skipped: no DATABASE_URL or API_KEY configured");
@@ -144,7 +141,7 @@ export async function loadFromCloud(): Promise<void> {
     const response = await fetch(cloudUrl, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
       },
     });
 
