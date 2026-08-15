@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ArrowLeft, TrendingUp, TrendingDown, DollarSign, ShoppingBag, Truck } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   BarChart,
   Bar,
@@ -49,6 +49,7 @@ const monthlyData = [
 
 function RevenueMonitoring() {
   const { isAuthenticated, isLoading, user } = useAuth();
+  const navigate = useNavigate();
   const [timeRange, setTimeRange] = useState("week");
 
   const chartData = timeRange === "day" ? dailyData : timeRange === "week" ? weeklyData : monthlyData;
@@ -56,9 +57,9 @@ function RevenueMonitoring() {
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || user?.role !== "vendor")) {
-      throw redirect({ to: "/auth/signin" });
+      navigate({ to: "/auth/signin", replace: true });
     }
-  }, [isAuthenticated, isLoading, user?.role]);
+  }, [isAuthenticated, isLoading, user?.role, navigate]);
 
   if (isLoading) {
     return (

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,9 +57,9 @@ function AddProduct() {
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || user?.role !== "vendor")) {
-      throw redirect({ to: "/auth/signin" });
+      navigate({ to: "/auth/signin", replace: true });
     }
-  }, [isAuthenticated, isLoading, user?.role]);
+  }, [isAuthenticated, isLoading, user?.role, navigate]);
 
   const updateField = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

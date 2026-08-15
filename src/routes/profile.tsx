@@ -1,12 +1,12 @@
 "use client";
 import { useEffect } from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ArrowLeft, User, Mail, Phone, MapPin, Store, Truck, LogOut } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/profile")({
   component: Profile,
@@ -14,10 +14,11 @@ export const Route = createFileRoute("/profile")({
 
 function Profile() {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      throw redirect({ to: "/auth/signin" });
+      navigate({ to: "/auth/signin", replace: true });
     }
   }, [isAuthenticated, isLoading]);
 
